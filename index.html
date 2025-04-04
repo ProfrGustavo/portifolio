@@ -1,19 +1,65 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Carrinho</title>
-    <link rel="stylesheet" href="styles.css"> 
+    <title>Prova Online</title>
+    <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-    <div class="topo"></div>
-    <div class="topo"></div>
+    <div class="container">
+        <div class="header">
+            <h1>Prova de Avaliação</h1>
+            <div class="student-info">
+                <div class="input-group">
+                    <label for="student-name">Nome:</label>
+                    <input type="text" id="student-name" required>
+                </div>
+                <div class="input-group">
+                    <label for="student-id">Número:</label>
+                    <input type="text" id="student-id" required>
+                </div>
+            </div>
+        </div>
 
+        <div class="exam-container" id="exam-container">
+            <!-- As questões serão inseridas aqui pelo JavaScript -->
+        </div>
 
+        <div class="controls">
+            <button id="submit-btn">Enviar Prova</button>
+            <div class="timer" id="timer">Tempo: --:--</div>
+        </div>
+    </div>
 
+    <!-- Modal de cola -->
+    <div class="cheat-modal" id="cheat-modal">
+        <div class="cheat-content">
+            <h1>ESTOU COLANDO!</h1>
+            <div class="cheat-timer" id="cheat-timer">05:00</div>
+            <div class="cheat-password">
+                <input type="password" id="password-input" placeholder="Digite a senha">
+                <button id="password-btn">Confirmar</button>
+            </div>
+        </div>
+    </div>
 
+    <!-- Gabarito -->
+    <div class="answer-key" id="answer-key">
+        <h2>Gabarito</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Questão</th>
+                    <th>Resposta</th>
+                </tr>
+            </thead>
+            <tbody id="key-body">
+                <!-- Gabarito será preenchido automaticamente -->
+            </tbody>
+        </table>
+    </div>
 
+    <script src="script.js"></script>
 </body>
 </html>
