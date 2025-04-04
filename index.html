@@ -140,8 +140,10 @@
         <ul>
             <li>A prova deve ser respondida sem sair da janela do navegador</li>
             <li>Não minimize a janela ou mude para outras abas</li>
-            <li>Você terá <span id="tempoRestante">30:00</span> para completar a prova</li>
+            <li>Você terá <span id="tempoRestante">60:00</span> para completar a prova</li>
             <li>Mudanças de aba serão detectadas e penalizadas</li>
+            <li>Ao terminar a prova chame o professor</li>
+
         </ul>
         <div id="formNome" style="margin-top: 20px;">
             <label for="nomeAluno">Digite seu nome completo:</label><br>
@@ -156,190 +158,203 @@
         
         <div class="questao">
             <h3>Questão 1 (Básico)</h3>
-            <p>O que é o GitHub?</p>
+            <p>Gustavo finalizou o código de seu portfólio e agora precisa hospedá-lo para que seu cliente possa acessar online. Ele quer uma plataforma que integre-se facilmente com seu repositório no GitHub e ofereça deploys automáticos. Qual serviço é mais adequado?</p>
             <div class="alternativas">
                 <label class="alternativa">
-                    <input type="radio" name="q1" value="A"> Um serviço de e-mail profissional
+                    <input type="radio" name="q1" value="A"> Netlify
                 </label>
                 <label class="alternativa">
-                    <input type="radio" name="q1" value="B"> Uma plataforma de hospedagem de código-fonte e controle de versão
+                    <input type="radio" name="q1" value="B"> Vercel
                 </label>
                 <label class="alternativa">
-                    <input type="radio" name="q1" value="C"> Um editor de código online
+                    <input type="radio" name="q1" value="C"> Google Drive
                 </label>
                 <label class="alternativa">
-                    <input type="radio" name="q1" value="D"> Uma rede social para desenvolvedores
+                    <input type="radio" name="q1" value="D"> Figma
                 </label>
             </div>
         </div>
         
         <div class="questao">
             <h3>Questão 2 (Básico)</h3>
-            <p>Qual é a função principal do arquivo index.html em um projeto web?</p>
+            <p>Ana está criando uma página estática e precisa organizar seus arquivos. Qual estrutura de pastas é a mais adequada para armazenar imagens, CSS e o arquivo principal?</p>
             <div class="alternativas">
                 <label class="alternativa">
-                    <input type="radio" name="q2" value="A"> Armazenar as imagens do site
+                    <input type="radio" name="q2" value="A"> projeto/index.html, projeto/fotos/, projeto/estilos/
                 </label>
                 <label class="alternativa">
-                    <input type="radio" name="q2" value="B"> Ser a página inicial que o navegador carrega por padrão
+                    <input type="radio" name="q2" value="B"> projeto/index.html, projeto/imagens/, projeto/css/style.css
                 </label>
                 <label class="alternativa">
-                    <input type="radio" name="q2" value="C"> Conter os estilos CSS do projeto
+                    <input type="radio" name="q2" value="C"> projeto/pagina.html, projeto/img/, projeto/design/
                 </label>
                 <label class="alternativa">
-                    <input type="radio" name="q2" value="D"> Guardar as credenciais de acesso ao site
+                    <input type="radio" name="q2" value="D"> projeto/home.html, projeto/assets/, projeto/scripts/
                 </label>
             </div>
         </div>
         
         <div class="questao">
             <h3>Questão 3 (Básico)</h3>
-            <p>Qual tag HTML é usada para criar um cabeçalho de nível 1?</p>
+            <p>Carlos quer criar uma seção de rodapé em seu site. Qual tag HTML ele deve usar para garantir melhor acessibilidade e SEO?</p>
             <div class="alternativas">
                 <label class="alternativa">
-                    <input type="radio" name="q3" value="A"> &lt;header&gt;
+                    <input type="radio" name="q3" value="A"> &lt;div id="footer"&gt;
                 </label>
                 <label class="alternativa">
-                    <input type="radio" name="q3" value="B"> &lt;h1&gt;
+                    <input type="radio" name="q3" value="B"> &lt;footer&gt;
                 </label>
                 <label class="alternativa">
-                    <input type="radio" name="q3" value="C"> &lt;head&gt;
+                    <input type="radio" name="q3" value="C"> &lt;section class="rodape"&gt;
                 </label>
                 <label class="alternativa">
-                    <input type="radio" name="q3" value="D"> &lt;title&gt;
+                    <input type="radio" name="q3" value="D"> &lt;bottom&gt;
                 </label>
             </div>
         </div>
         
         <div class="questao">
             <h3>Questão 4 (Intermediário)</h3>
-            <p>O que é o Gitpod e como abri-lo rapidamente para um repositório no GitHub?</p>
+            <p>Julia está com dificuldades para debugar um loop em JavaScript. Qual ferramenta de IA pode sugerir correções em tempo real enquanto ela digita o código?</p>
             <div class="alternativas">
                 <label class="alternativa">
-                    <input type="radio" name="q4" value="A"> É um fórum para desenvolvedores - acessado pelo atalho (f)
+                    <input type="radio" name="q4" value="A"> ChatGPT
                 </label>
                 <label class="alternativa">
-                    <input type="radio" name="q4" value="B"> É um ambiente de desenvolvimento online - aberto com o atalho (.)
+                    <input type="radio" name="q4" value="B"> GitHub Copilot
                 </label>
                 <label class="alternativa">
-                    <input type="radio" name="q4" value="C"> É um sistema de tickets - acessado pelo atalho (t)
+                    <input type="radio" name="q4" value="C"> Canva
                 </label>
                 <label class="alternativa">
-                    <input type="radio" name="q4" value="D"> É um editor de imagens - aberto com o atalho (i)
+                    <input type="radio" name="q4" value="D"> Figma
                 </label>
             </div>
         </div>
         
         <div class="questao">
             <h3>Questão 5 (Intermediário)</h3>
-            <p>Qual a finalidade de uma licença em um projeto de software no GitHub?</p>
+            <p>Mariana quer estilizar três seções de sua página com cores diferentes: topo (azul), meio (verde) e rodapé (preto). Qual formato de classe CSS ela deve usar?</p>
             <div class="alternativas">
                 <label class="alternativa">
-                    <input type="radio" name="q5" value="A"> Apenas para mostrar que o projeto é profissional
+                    <input type="radio" name="q5" value="A"> 
+                    .topo { background-color: blue; }<br>
+                    .meio { background-color: green; }<br>
+                    .final { background-color: black; }
                 </label>
                 <label class="alternativa">
-                    <input type="radio" name="q5" value="B"> Definir como outras pessoas podem usar, modificar e distribuir o código
+                    <input type="radio" name="q5" value="B"> 
+                    #topo { color: blue; }<br>
+                    #meio { color: green; }<br>
+                    #final { color: black; }
                 </label>
                 <label class="alternativa">
-                    <input type="radio" name="q5" value="C"> Proteger o código contra cópias não autorizadas
-                </label>
-                <label class="alternativa">
-                    <input type="radio" name="q5" value="D"> Garantir que apenas o autor possa ver o código
+                    <input type="radio" name="q5" value="C"> 
+                    div { background: blue; }<br>
+                    section { background: green; }<br>
+                    footer { background: black; }
                 </label>
             </div>
         </div>
         
         <div class="questao">
             <h3>Questão 6 (Intermediário)</h3>
-            <p>Qual propriedade CSS é usada para definir a cor de fundo de um elemento?</p>
+            <p>Lucas escreveu o código abaixo, mas a div não está sendo exibida. Qual é o erro?</p>
+            <pre>
+        &lt;div class="banner"&gt; &lt;/div&gt;
+        .banner {
+            width: 100%;
+            height: 200px;
+        }
+            </pre>
             <div class="alternativas">
                 <label class="alternativa">
-                    <input type="radio" name="q6" value="A"> color
+                    <input type="radio" name="q6" value="A"> Falta de conteúdo dentro da div
                 </label>
                 <label class="alternativa">
-                    <input type="radio" name="q6" value="B"> background-color
+                    <input type="radio" name="q6" value="B"> Falta de background-color ou border para visualização
                 </label>
                 <label class="alternativa">
-                    <input type="radio" name="q6" value="C"> bgcolor
+                    <input type="radio" name="q6" value="C"> A classe foi escrita errada no CSS
                 </label>
                 <label class="alternativa">
-                    <input type="radio" name="q6" value="D"> background
+                    <input type="radio" name="q6" value="D"> Não há erro; a div está correta, mas invisível sem estilos adicionais
                 </label>
             </div>
         </div>
         
         <div class="questao">
-            <h3>Questão 7 (Intermediário)</h3>
-            <p>Qual formato de imagem é mais adequado para fotos com muitas cores e gradientes?</p>
+            <h3>Questão 7 (Avançado)</h3>
+            <p>Ao tentar abrir seu repositório no GitHub Codespaces, Pedro digitou um atalho no navegador para editar o código rapidamente. Qual é esse atalho?</p>
             <div class="alternativas">
                 <label class="alternativa">
-                    <input type="radio" name="q7" value="A"> PNG
+                    <input type="radio" name="q7" value="A"> Pressionar Tab no repositório
                 </label>
                 <label class="alternativa">
-                    <input type="radio" name="q7" value="B"> JPG
+                    <input type="radio" name="q7" value="B"> Digitar ! na barra de URL
                 </label>
                 <label class="alternativa">
-                    <input type="radio" name="q7" value="C"> SVG
+                    <input type="radio" name="q7" value="C"> Pressionar . (ponto) no repositório
                 </label>
                 <label class="alternativa">
-                    <input type="radio" name="q7" value="D"> GIF
+                    <input type="radio" name="q7" value="D"> Clicar em "Fork" e depois em "Edit"
                 </label>
             </div>
         </div>
         
         <div class="questao">
             <h3>Questão 8 (Avançado)</h3>
-            <p>Qual é a representação RGB para a cor branca?</p>
+            <p>Um elemento está muito colado no topo da página, e Carla quer adicionar espaço externo a ele. Qual propriedade CSS ela deve usar?</p>
             <div class="alternativas">
                 <label class="alternativa">
-                    <input type="radio" name="q8" value="A"> rgb(0, 0, 0)
+                    <input type="radio" name="q8" value="A"> padding-top: 20px;
                 </label>
                 <label class="alternativa">
-                    <input type="radio" name="q8" value="B"> rgb(255, 0, 0)
+                    <input type="radio" name="q8" value="B"> margin-top: 20px;
                 </label>
                 <label class="alternativa">
-                    <input type="radio" name="q8" value="C"> rgb(255, 255, 255)
+                    <input type="radio" name="q8" value="C"> border-top: 20px;
                 </label>
                 <label class="alternativa">
-                    <input type="radio" name="q8" value="D"> rgb(128, 128, 128)
+                    <input type="radio" name="q8" value="D"> position: top 20px;
                 </label>
             </div>
         </div>
         
         <div class="questao">
             <h3>Questão 9 (Avançado)</h3>
-            <p>Qual é a principal vantagem de usar classes em CSS?</p>
+            <p>Rafael quer criar um protótipo de interface para validar com seu time antes de codificar. Qual recurso do Canva é mais útil para isso?</p>
             <div class="alternativas">
                 <label class="alternativa">
-                    <input type="radio" name="q9" value="A"> Permitir a reutilização de estilos em múltiplos elementos
+                    <input type="radio" name="q9" value="A"> Templates de apresentação
                 </label>
                 <label class="alternativa">
-                    <input type="radio" name="q9" value="B"> Reduzir o tamanho do arquivo HTML
+                    <input type="radio" name="q9" value="B"> Ferramenta de wireframes
                 </label>
                 <label class="alternativa">
-                    <input type="radio" name="q9" value="C"> Aumentar a velocidade de carregamento da página
+                    <input type="radio" name="q9" value="C"> Editor de vídeo
                 </label>
                 <label class="alternativa">
-                    <input type="radio" name="q9" value="D"> Substituir a necessidade de JavaScript
+                    <input type="radio" name="q9" value="D"> Criação de logos
                 </label>
             </div>
         </div>
         
         <div class="questao">
             <h3>Questão 10 (Avançado)</h3>
-            <p>Qual dessas ferramentas NÃO é um assistente de IA para programação?</p>
+            <p>Qual é a diferença entre rgb(255, 0, 0) e #FF0000 no CSS?</p>
             <div class="alternativas">
                 <label class="alternativa">
-                    <input type="radio" name="q10" value="A"> ChatGPT
+                    <input type="radio" name="q10" value="A"> RGB é para imagens; HEX é para textos
                 </label>
                 <label class="alternativa">
-                    <input type="radio" name="q10" value="B"> DeepSeek
+                    <input type="radio" name="q10" value="B"> RGB usa valores decimais; HEX usa valores hexadecimais, mas ambas representam a mesma cor vermelha
                 </label>
                 <label class="alternativa">
-                    <input type="radio" name="q10" value="C"> AluraStart
+                    <input type="radio" name="q10" value="C"> HEX é mais moderno que RGB
                 </label>
                 <label class="alternativa">
-                    <input type="radio" name="q10" value="D"> GitHub Copilot
+                    <input type="radio" name="q10" value="D"> RGB não funciona em navegadores antigos
                 </label>
             </div>
         </div>
