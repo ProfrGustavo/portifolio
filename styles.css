@@ -1,84 +1,120 @@
+:root {
+    --primary-color: #3498db;
+    --secondary-color: #2980b9;
+    --background-color: #f8f9fa;
+    --container-color: #ffffff;
+    --text-color: #2c3e50;
+    --error-color: #e74c3c;
+    --success-color: #2ecc71;
+    --light-blue: #e1f5fe;
+    --border-color: #dfe6e9;
+}
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Arial', sans-serif;
+    font-family: 'Roboto', sans-serif;
 }
 
 body {
-    background-color: #f5f5f5;
-    color: #333;
+    background-color: var(--background-color);
+    color: var(--text-color);
     line-height: 1.6;
+    padding: 20px;
 }
 
 .container {
     max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: #fff;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin: 30px auto;
+    padding: 30px;
+    background-color: var(--container-color);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
 }
 
 .header {
     text-align: center;
     margin-bottom: 30px;
     padding-bottom: 20px;
-    border-bottom: 1px solid #eee;
+    border-bottom: 2px solid var(--border-color);
 }
 
 .header h1 {
     margin-bottom: 20px;
-    color: #2c3e50;
+    color: var(--primary-color);
+    font-weight: 700;
+    font-size: 2.2rem;
 }
 
 .student-info {
     display: flex;
     justify-content: center;
-    gap: 20px;
+    gap: 30px;
     margin-top: 20px;
 }
 
 .input-group {
     display: flex;
     flex-direction: column;
+    min-width: 200px;
 }
 
 .input-group label {
-    margin-bottom: 5px;
-    font-weight: bold;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: var(--text-color);
 }
 
 .input-group input {
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    padding: 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 16px;
+    transition: border 0.3s;
+}
+
+.input-group input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
 }
 
 .question {
     margin-bottom: 25px;
-    padding: 15px;
-    background-color: #f9f9f9;
-    border-radius: 5px;
-    border-left: 4px solid #3498db;
+    padding: 20px;
+    background-color: var(--light-blue);
+    border-radius: 8px;
+    border-left: 5px solid var(--primary-color);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
 .question h3 {
-    margin-bottom: 10px;
-    color: #2c3e50;
+    margin-bottom: 15px;
+    color: var(--text-color);
+    font-weight: 500;
 }
 
 .options {
-    margin-left: 20px;
+    margin-left: 10px;
 }
 
 .option {
-    margin: 8px 0;
+    margin: 12px 0;
     display: flex;
     align-items: center;
 }
 
 .option input {
-    margin-right: 10px;
+    margin-right: 12px;
+    transform: scale(1.2);
+    cursor: pointer;
+}
+
+.option label {
+    cursor: pointer;
+    font-weight: 400;
 }
 
 .controls {
@@ -87,28 +123,35 @@ body {
     align-items: center;
     margin-top: 30px;
     padding-top: 20px;
-    border-top: 1px solid #eee;
+    border-top: 2px solid var(--border-color);
 }
 
 #submit-btn {
-    padding: 10px 20px;
-    background-color: #2ecc71;
+    padding: 12px 25px;
+    background-color: var(--success-color);
     color: white;
     border: none;
-    border-radius: 4px;
+    border-radius: 6px;
     cursor: pointer;
     font-size: 16px;
-    transition: background-color 0.3s;
+    font-weight: 500;
+    transition: all 0.3s;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 #submit-btn:hover {
     background-color: #27ae60;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 .timer {
     font-size: 18px;
     font-weight: bold;
-    color: #e74c3c;
+    color: var(--primary-color);
+    background-color: rgba(52, 152, 219, 0.1);
+    padding: 8px 15px;
+    border-radius: 20px;
 }
 
 .cheat-modal {
@@ -122,45 +165,106 @@ body {
     z-index: 1000;
     justify-content: center;
     align-items: center;
-    color: #e74c3c;
 }
 
-.cheat-content {
+.cheat-box {
+    background-color: white;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    max-width: 500px;
+    width: 90%;
     text-align: center;
-    animation: pulse 1s infinite;
 }
 
 .cheat-content h1 {
-    font-size: 72px;
+    font-size: 3.5rem;
     margin-bottom: 30px;
     text-transform: uppercase;
+    color: var(--error-color);
+    font-weight: 700;
+    letter-spacing: 2px;
 }
 
 .cheat-timer {
-    font-size: 48px;
+    font-size: 3rem;
     margin-bottom: 30px;
     font-weight: bold;
+    color: var(--text-color);
 }
 
 .cheat-password {
-    margin-top: 20px;
+    margin-top: 30px;
 }
 
 .cheat-password input {
-    padding: 10px;
+    padding: 12px;
     font-size: 18px;
     margin-right: 10px;
     width: 200px;
+    border: 2px solid var(--border-color);
+    border-radius: 6px;
+    transition: all 0.3s;
+}
+
+.cheat-password input:focus {
+    border-color: var(--primary-color);
+    outline: none;
 }
 
 .cheat-password button {
-    padding: 10px 20px;
-    background-color: #e74c3c;
+    padding: 12px 25px;
+    background-color: var(--primary-color);
     color: white;
     border: none;
-    border-radius: 4px;
+    border-radius: 6px;
     cursor: pointer;
     font-size: 16px;
+    font-weight: 500;
+    transition: all 0.3s;
+}
+
+.cheat-password button:hover {
+    background-color: var(--secondary-color);
+}
+
+.answer-key {
+    margin-top: 40px;
+    padding: 30px;
+    background-color: var(--container-color);
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    display: none;
+    border: 1px solid var(--border-color);
+}
+
+.answer-key h2 {
+    margin-bottom: 20px;
+    color: var(--primary-color);
+    text-align: center;
+    font-size: 1.8rem;
+}
+
+.answer-key table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+.answer-key th, .answer-key td {
+    padding: 12px;
+    text-align: center;
+    border: 1px solid var(--border-color);
+}
+
+.answer-key th {
+    background-color: var(--primary-color);
+    color: white;
+    font-weight: 500;
+}
+
+.answer-key tr:nth-child(even) {
+    background-color: rgba(52, 152, 219, 0.05);
 }
 
 @keyframes pulse {
@@ -169,36 +273,33 @@ body {
     100% { transform: scale(1); }
 }
 
-.answer-key {
-    margin-top: 40px;
-    padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 5px;
-    display: none;
-}
-
-.answer-key h2 {
-    margin-bottom: 15px;
-    color: #2c3e50;
-    text-align: center;
-}
-
-.answer-key table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.answer-key th, .answer-key td {
-    padding: 10px;
-    text-align: center;
-    border: 1px solid #ddd;
-}
-
-.answer-key th {
-    background-color: #3498db;
-    color: white;
-}
-
-.answer-key tr:nth-child(even) {
-    background-color: #f2f2f2;
+@media (max-width: 768px) {
+    .container {
+        padding: 20px;
+    }
+    
+    .student-info {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .cheat-content h1 {
+        font-size: 2.5rem;
+    }
+    
+    .cheat-timer {
+        font-size: 2rem;
+    }
+    
+    .cheat-password {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .cheat-password input {
+        margin-right: 0;
+        margin-bottom: 10px;
+        width: 100%;
+    }
 }

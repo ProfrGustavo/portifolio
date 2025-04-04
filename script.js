@@ -14,8 +14,9 @@ document.addEventListener('DOMContentLoaded', function() {
     let cheatTimeLeft = 5 * 60; // 5 minutos em segundos
     let cheatInterval;
     let isCheating = false;
+    let examStarted = false;
     
-    // Questões de exemplo (você pode substituir por suas próprias questões)
+    // Questões de exemplo
     const questions = [
         {
             question: "1. Qual é a capital do Brasil?",
@@ -129,7 +130,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     ];
     
-    // Função para carregar as questões na página
+    // Carregar questões na página
     function loadQuestions() {
         questions.forEach((q, index) => {
             const questionDiv = document.createElement('div');
@@ -149,7 +150,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const input = document.createElement('input');
                 input.type = 'radio';
                 input.name = `question-${index}`;
-                input.value = opt.substring(0, 1); // Pega a letra (a, b, c, etc.)
+                input.value = opt.substring(0, 1);
                 input.id = `q${index}-${opt.substring(0, 1)}`;
                 
                 const label = document.createElement('label');
@@ -166,48 +167,51 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Função para verificar se o aluno está tentando colar
+    // Verificar se o aluno está tentando colar
     function checkForCheating() {
         // Verifica se a janela perdeu o foco
         window.addEventListener('blur', function() {
-            if (!isCheating) {
+            if (examStarted && !isCheating) {
                 startCheatTimer();
             }
         });
         
         // Verifica se a janela foi minimizada
         document.addEventListener('visibilitychange', function() {
-            if (document.hidden && !isCheating) {
+            if (document.hidden && examStarted && !isCheating) {
                 startCheatTimer();
             }
         });
     }
     
-    // Função para iniciar o timer de cola
+    // Iniciar o timer de cola
     function startCheatTimer() {
         isCheating = true;
         cheatModal.style.display = 'flex';
         cheatTimeLeft = 5 * 60; // Reset para 5 minutos
         
+        updateCheatTimerDisplay();
+        
         cheatInterval = setInterval(function() {
             cheatTimeLeft--;
-            
-            const minutes = Math.floor(cheatTimeLeft / 60);
-            const seconds = cheatTimeLeft % 60;
-            
-            cheatTimer.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            updateCheatTimerDisplay();
             
             if (cheatTimeLeft <= 0) {
                 clearInterval(cheatInterval);
-                // Aqui você pode adicionar ações quando o tempo acabar, como desqualificar o aluno
                 alert('Tempo esgotado! Você foi desqualificado por tentativa de cola.');
-                // Recarregar a página ou tomar outras ações
                 location.reload();
             }
         }, 1000);
     }
     
-    // Função para verificar a senha
+    // Atualizar display do timer de cola
+    function updateCheatTimerDisplay() {
+        const minutes = Math.floor(cheatTimeLeft / 60);
+        const seconds = cheatTimeLeft % 60;
+        cheatTimer.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    }
+    
+    // Verificar a senha
     function checkPassword() {
         if (passwordInput.value === CORRECT_PASSWORD) {
             clearInterval(cheatInterval);
@@ -216,64 +220,16 @@ document.addEventListener('DOMContentLoaded', function() {
             passwordInput.value = '';
         } else {
             alert('Senha incorreta!');
+            passwordInput.value = '';
+            passwordInput.focus();
         }
     }
     
-    // Função para mostrar o gabarito
+    // Mostrar gabarito
     function showAnswerKey() {
         keyBody.innerHTML = '';
         
         questions.forEach((q, index) => {
             const row = document.createElement('tr');
             
-            const cellQuestion = document.createElement('td');
-            cellQuestion.textContent = index + 1;
-            
-            const cellAnswer = document.createElement('td');
-            cellAnswer.textContent = q.correctAnswer.toUpperCase();
-            
-            row.appendChild(cellQuestion);
-            row.appendChild(cellAnswer);
-            keyBody.appendChild(row);
-        });
-        
-        answerKey.style.display = 'block';
-    }
-    
-    // Função para calcular o tempo restante (opcional)
-    function startExamTimer() {
-        // Você pode implementar um timer para a prova completa se desejar
-        // Esta é apenas uma demonstração
-        let seconds = 0;
-        
-        setInterval(function() {
-            seconds++;
-            const minutes = Math.floor(seconds / 60);
-            const secs = seconds % 60;
-            timerDisplay.textContent = `Tempo: ${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-        }, 1000);
-    }
-    
-    // Event Listeners
-    passwordBtn.addEventListener('click', checkPassword);
-    
-    submitBtn.addEventListener('click', function() {
-        if (confirm('Tem certeza que deseja enviar a prova? Não será possível alterar as respostas depois.')) {
-            showAnswerKey();
-            // Aqui você pode adicionar lógica para enviar as respostas para um servidor
-            alert('Prova enviada com sucesso!');
-        }
-    });
-    
-    // Inicialização
-    loadQuestions();
-    checkForCheating();
-    startExamTimer();
-    
-    // Permitir enviar a senha pressionando Enter
-    passwordInput.addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-            checkPassword();
-        }
-    });
-});
+            const
