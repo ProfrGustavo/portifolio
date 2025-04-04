@@ -39,10 +39,33 @@
             cursor: pointer;
             margin-top: 20px;
         }
+        
+        .questao {
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        #gabarito {
+            display: none;
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+        }
+        
+        .resposta-correta {
+            color: green;
+            font-weight: bold;
+        }
+        
+        .resposta-incorreta {
+            color: red;
+        }
     </style>
 </head>
 <body>
-    <h1>Avaliação de Conhecimentos</h1>
+    <h1>Avaliação de Programação</h1>
     
     <div id="inicio">
         <p>Leia as instruções cuidadosamente:</p>
@@ -52,20 +75,85 @@
             <li>Você terá <span id="tempoRestante">30:00</span> para completar a prova</li>
             <li>Mudanças de aba serão detectadas e penalizadas</li>
         </ul>
+        <div id="formNome" style="margin-top: 20px;">
+            <label for="nomeAluno">Digite seu nome:</label>
+            <input type="text" id="nomeAluno" required>
+        </div>
         <button id="iniciarProva">Iniciar Prova</button>
     </div>
     
     <div id="prova" style="display: none;">
-        <!-- Conteúdo da prova virá aqui -->
-        <h2>Questão 1</h2>
-        <p>Qual é a capital do Brasil?</p>
-        <input type="text" id="resposta1">
+        <h2>Prova de Conhecimentos Gerais</h2>
+        <p>Aluno: <span id="nomeAlunoExibicao"></span></p>
         
-        <h2>Questão 2</h2>
-        <p>2 + 2 = ?</p>
-        <input type="number" id="resposta2">
+        <div class="questao">
+            <h3>Questão 1</h3>
+            <p>Qual é a capital do Brasil?</p>
+            <input type="text" id="resposta1">
+        </div>
+        
+        <div class="questao">
+            <h3>Questão 2</h3>
+            <p>2 + 2 = ?</p>
+            <input type="number" id="resposta2">
+        </div>
+        
+        <div class="questao">
+            <h3>Questão 3</h3>
+            <p>Quem pintou a Mona Lisa?</p>
+            <input type="text" id="resposta3">
+        </div>
+        
+        <div class="questao">
+            <h3>Questão 4</h3>
+            <p>Qual o maior planeta do sistema solar?</p>
+            <input type="text" id="resposta4">
+        </div>
+        
+        <div class="questao">
+            <h3>Questão 5</h3>
+            <p>Quantos continentes existem no mundo?</p>
+            <input type="number" id="resposta5">
+        </div>
+        
+        <div class="questao">
+            <h3>Questão 6</h3>
+            <p>Qual o nome do processo de transformação de lagarta em borboleta?</p>
+            <input type="text" id="resposta6">
+        </div>
+        
+        <div class="questao">
+            <h3>Questão 7</h3>
+            <p>Qual o símbolo químico do ouro?</p>
+            <input type="text" id="resposta7">
+        </div>
+        
+        <div class="questao">
+            <h3>Questão 8</h3>
+            <p>Quem escreveu "Dom Quixote"?</p>
+            <input type="text" id="resposta8">
+        </div>
+        
+        <div class="questao">
+            <h3>Questão 9</h3>
+            <p>Qual oceano banha o litoral brasileiro?</p>
+            <input type="text" id="resposta9">
+        </div>
+        
+        <div class="questao">
+            <h3>Questão 10</h3>
+            <p>Em que ano o homem pisou na Lua pela primeira vez?</p>
+            <input type="number" id="resposta10">
+        </div>
         
         <button id="finalizar">Finalizar Prova</button>
+    </div>
+    
+    <div id="gabarito">
+        <h2>Seu Gabarito</h2>
+        <p>Aluno: <span id="nomeAlunoGabarito"></span></p>
+        <div id="respostasAluno"></div>
+        <button id="voltarInicio">Voltar ao Início</button>
     </div>
     
     <div id="aviso">
@@ -87,22 +175,51 @@
         const inicioDiv = document.getElementById('inicio');
         const provaDiv = document.getElementById('prova');
         const avisoDiv = document.getElementById('aviso');
+        const gabaritoDiv = document.getElementById('gabarito');
         const contadorTentativasSpan = document.getElementById('contadorTentativas');
         const tempoRestanteSpan = document.getElementById('tempoRestante');
+        const nomeAlunoInput = document.getElementById('nomeAluno');
+        const nomeAlunoExibicao = document.getElementById('nomeAlunoExibicao');
+        const nomeAlunoGabarito = document.getElementById('nomeAlunoGabarito');
+        const respostasAlunoDiv = document.getElementById('respostasAluno');
         const iniciarBtn = document.getElementById('iniciarProva');
         const finalizarBtn = document.getElementById('finalizar');
         const retomarBtn = document.getElementById('retomarProva');
+        const voltarInicioBtn = document.getElementById('voltarInicio');
+        
+        // Respostas corretas (pode ser expandido)
+        const respostasCorretas = {
+            1: "Brasília",
+            2: 4,
+            3: "Leonardo da Vinci",
+            4: "Júpiter",
+            5: 7,
+            6: "Metamorfose",
+            7: "Au",
+            8: "Miguel de Cervantes",
+            9: "Atlântico",
+            10: 1969
+        };
         
         // Event Listeners
         iniciarBtn.addEventListener('click', iniciarProva);
         finalizarBtn.addEventListener('click', finalizarProva);
         retomarBtn.addEventListener('click', retomarProva);
+        voltarInicioBtn.addEventListener('click', voltarInicio);
         
         // Função para iniciar a prova
         function iniciarProva() {
+            if (!nomeAlunoInput.value.trim()) {
+                alert("Por favor, digite seu nome antes de iniciar a prova.");
+                return;
+            }
+            
             provaIniciada = true;
             inicioDiv.style.display = 'none';
             provaDiv.style.display = 'block';
+            
+            // Exibir nome do aluno
+            nomeAlunoExibicao.textContent = nomeAlunoInput.value.trim();
             
             // Iniciar contador de tempo
             intervaloContador = setInterval(atualizarContador, 1000);
@@ -168,14 +285,53 @@
             window.removeEventListener('blur', verificarMudancaAba);
             document.removeEventListener('visibilitychange', verificarVisibilidade);
             
-            // Aqui você pode adicionar lógica para enviar as respostas
-            alert('Prova finalizada!');
+            // Gerar gabarito
+            gerarGabarito();
             
-            // Mostrar resultados ou redirecionar
+            // Mostrar gabarito
             provaDiv.style.display = 'none';
+            gabaritoDiv.style.display = 'block';
+        }
+        
+        // Função para gerar o gabarito
+        function gerarGabarito() {
+            nomeAlunoGabarito.textContent = nomeAlunoInput.value.trim();
+            respostasAlunoDiv.innerHTML = '';
+            
+            for (let i = 1; i <= 10; i++) {
+                const respostaElement = document.getElementById(`resposta${i}`);
+                const respostaAluno = respostaElement ? respostaElement.value : '';
+                const respostaCorreta = respostasCorretas[i];
+                const estaCorreta = String(respostaAluno).toLowerCase() === String(respostaCorreta).toLowerCase();
+                
+                const questaoDiv = document.createElement('div');
+                questaoDiv.className = `questao ${estaCorreta ? 'resposta-correta' : 'resposta-incorreta'}`;
+                questaoDiv.innerHTML = `
+                    <h3>Questão ${i}</h3>
+                    <p>Sua resposta: ${respostaAluno || "[Não respondida]"}</p>
+                    <p>Resposta correta: ${respostaCorreta}</p>
+                `;
+                
+                respostasAlunoDiv.appendChild(questaoDiv);
+            }
+        }
+        
+        // Função para voltar ao início
+        function voltarInicio() {
+            gabaritoDiv.style.display = 'none';
             inicioDiv.style.display = 'block';
             tentativasRestantes = 3;
             contadorTentativasSpan.textContent = tentativasRestantes;
+            tempoRestante = 30 * 60;
+            tempoRestanteSpan.textContent = "30:00";
+            
+            // Limpar respostas
+            for (let i = 1; i <= 10; i++) {
+                const respostaElement = document.getElementById(`resposta${i}`);
+                if (respostaElement) {
+                    respostaElement.value = '';
+                }
+            }
         }
     </script>
 </body>
