@@ -3,32 +3,180 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prova Online</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <title>Avaliação - Sistema de Monitoramento</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        #aviso {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.9);
+            color: white;
+            z-index: 9999;
+            text-align: center;
+            padding-top: 20%;
+        }
+        
+        #contadorTentativas {
+            color: red;
+            font-weight: bold;
+        }
+        
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <div class="exam-container" id="exam-container">
-            <!-- As questões serão inseridas aqui pelo JavaScript -->
-        </div>
+    <h1>Avaliação de Conhecimentos</h1>
+    
+    <div id="inicio">
+        <p>Leia as instruções cuidadosamente:</p>
+        <ul>
+            <li>A prova deve ser respondida sem sair da janela do navegador</li>
+            <li>Não minimize a janela ou mude para outras abas</li>
+            <li>Você terá <span id="tempoRestante">30:00</span> para completar a prova</li>
+            <li>Mudanças de aba serão detectadas e penalizadas</li>
+        </ul>
+        <button id="iniciarProva">Iniciar Prova</button>
+    </div>
+    
+    <div id="prova" style="display: none;">
+        <!-- Conteúdo da prova virá aqui -->
+        <h2>Questão 1</h2>
+        <p>Qual é a capital do Brasil?</p>
+        <input type="text" id="resposta1">
+        
+        <h2>Questão 2</h2>
+        <p>2 + 2 = ?</p>
+        <input type="number" id="resposta2">
+        
+        <button id="finalizar">Finalizar Prova</button>
+    </div>
+    
+    <div id="aviso">
+        <h2>ATENÇÃO!</h2>
+        <p>Você mudou de aba ou minimizou a janela!</p>
+        <p>Tentativas restantes: <span id="contadorTentativas">3</span></p>
+        <p>Se continuar, sua prova será automaticamente encerrada.</p>
+        <button id="retomarProva">Retomar Prova</button>
     </div>
 
-    <!-- Modal de cola -->
-    <div class="cheat-modal" id="cheat-modal">
-        <div class="cheat-box">
-            <div class="cheat-content">
-                <h1>ATENÇÃO!</h1>
-                <h2>Você saiu da tela da prova</h2>
-                <div class="cheat-timer" id="cheat-timer">05:00</div>
-                <div class="cheat-password">
-                    <input type="password" id="password-input" placeholder="Digite a senha">
-                    <button id="password-btn">Confirmar</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script src="script.js"></script>
+    <script>
+        // Variáveis de controle
+        let provaIniciada = false;
+        let tentativasRestantes = 3;
+        let tempoRestante = 30 * 60; // 30 minutos em segundos
+        let intervaloContador;
+        
+        // Elementos DOM
+        const inicioDiv = document.getElementById('inicio');
+        const provaDiv = document.getElementById('prova');
+        const avisoDiv = document.getElementById('aviso');
+        const contadorTentativasSpan = document.getElementById('contadorTentativas');
+        const tempoRestanteSpan = document.getElementById('tempoRestante');
+        const iniciarBtn = document.getElementById('iniciarProva');
+        const finalizarBtn = document.getElementById('finalizar');
+        const retomarBtn = document.getElementById('retomarProva');
+        
+        // Event Listeners
+        iniciarBtn.addEventListener('click', iniciarProva);
+        finalizarBtn.addEventListener('click', finalizarProva);
+        retomarBtn.addEventListener('click', retomarProva);
+        
+        // Função para iniciar a prova
+        function iniciarProva() {
+            provaIniciada = true;
+            inicioDiv.style.display = 'none';
+            provaDiv.style.display = 'block';
+            
+            // Iniciar contador de tempo
+            intervaloContador = setInterval(atualizarContador, 1000);
+            
+            // Configurar eventos de monitoramento
+            window.addEventListener('blur', verificarMudancaAba);
+            document.addEventListener('visibilitychange', verificarVisibilidade);
+        }
+        
+        // Função para atualizar o contador de tempo
+        function atualizarContador() {
+            tempoRestante--;
+            
+            if (tempoRestante <= 0) {
+                clearInterval(intervaloContador);
+                alert('Tempo esgotado! A prova será encerrada.');
+                finalizarProva();
+                return;
+            }
+            
+            const minutos = Math.floor(tempoRestante / 60);
+            const segundos = tempoRestante % 60;
+            tempoRestanteSpan.textContent = `${minutos}:${segundos < 10 ? '0' : ''}${segundos}`;
+        }
+        
+        // Função para verificar mudança de aba
+        function verificarMudancaAba() {
+            if (provaIniciada && document.hidden) {
+                avisarMudanca();
+            }
+        }
+        
+        // Função para verificar visibilidade da página
+        function verificarVisibilidade() {
+            if (provaIniciada && document.hidden) {
+                avisarMudanca();
+            }
+        }
+        
+        // Função para avisar sobre mudança de aba
+        function avisarMudanca() {
+            tentativasRestantes--;
+            contadorTentativasSpan.textContent = tentativasRestantes;
+            avisoDiv.style.display = 'block';
+            
+            if (tentativasRestantes <= 0) {
+                alert('Você excedeu o número de tentativas permitidas. Prova encerrada!');
+                finalizarProva();
+            }
+        }
+        
+        // Função para retomar a prova
+        function retomarProva() {
+            avisoDiv.style.display = 'none';
+        }
+        
+        // Função para finalizar a prova
+        function finalizarProva() {
+            provaIniciada = false;
+            clearInterval(intervaloContador);
+            
+            // Remover event listeners
+            window.removeEventListener('blur', verificarMudancaAba);
+            document.removeEventListener('visibilitychange', verificarVisibilidade);
+            
+            // Aqui você pode adicionar lógica para enviar as respostas
+            alert('Prova finalizada!');
+            
+            // Mostrar resultados ou redirecionar
+            provaDiv.style.display = 'none';
+            inicioDiv.style.display = 'block';
+            tentativasRestantes = 3;
+            contadorTentativasSpan.textContent = tentativasRestantes;
+        }
+    </script>
 </body>
 </html>
