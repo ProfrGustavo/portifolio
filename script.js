@@ -5,10 +5,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const cheatTimer = document.getElementById('cheat-timer');
     const passwordInput = document.getElementById('password-input');
     const passwordBtn = document.getElementById('password-btn');
-    const submitBtn = document.getElementById('submit-btn');
-    const answerKey = document.getElementById('answer-key');
-    const keyBody = document.getElementById('key-body');
-    const timerDisplay = document.getElementById('timer');
     
     const CORRECT_PASSWORD = '12071997';
     let cheatTimeLeft = 5 * 60; // 5 minutos em segundos
@@ -40,94 +36,7 @@ document.addEventListener('DOMContentLoaded', function() {
             ],
             correctAnswer: "b"
         },
-        {
-            question: "3. Qual é o maior oceano da Terra?",
-            options: [
-                "a) Atlântico",
-                "b) Índico",
-                "c) Ártico",
-                "d) Pacífico",
-                "e) Antártico"
-            ],
-            correctAnswer: "d"
-        },
-        {
-            question: "4. Quem pintou a Mona Lisa?",
-            options: [
-                "a) Vincent van Gogh",
-                "b) Pablo Picasso",
-                "c) Leonardo da Vinci",
-                "d) Michelangelo",
-                "e) Claude Monet"
-            ],
-            correctAnswer: "c"
-        },
-        {
-            question: "5. Qual é o elemento químico com símbolo 'O'?",
-            options: [
-                "a) Ouro",
-                "b) Ósmio",
-                "c) Oxigênio",
-                "d) Oganésson",
-                "e) Óxido"
-            ],
-            correctAnswer: "c"
-        },
-        {
-            question: "6. Em que ano o homem pisou na Lua pela primeira vez?",
-            options: [
-                "a) 1965",
-                "b) 1969",
-                "c) 1972",
-                "d) 1958",
-                "e) 1967"
-            ],
-            correctAnswer: "b"
-        },
-        {
-            question: "7. Qual é o maior animal terrestre?",
-            options: [
-                "a) Elefante africano",
-                "b) Girafa",
-                "c) Baleia azul",
-                "d) Dinossauro",
-                "e) Rinoceronte"
-            ],
-            correctAnswer: "a"
-        },
-        {
-            question: "8. Qual destes países não faz parte da Europa?",
-            options: [
-                "a) Suíça",
-                "b) Noruega",
-                "c) Argentina",
-                "d) Grécia",
-                "e) Finlândia"
-            ],
-            correctAnswer: "c"
-        },
-        {
-            question: "9. Quantos lados tem um heptágono?",
-            options: [
-                "a) 5",
-                "b) 6",
-                "c) 7",
-                "d) 8",
-                "e) 9"
-            ],
-            correctAnswer: "c"
-        },
-        {
-            question: "10. Qual é a fórmula química da água?",
-            options: [
-                "a) HO",
-                "b) H2O",
-                "c) H2O2",
-                "d) H3O",
-                "e) HO2"
-            ],
-            correctAnswer: "b"
-        }
+        // Adicione mais questões conforme necessário
     ];
     
     // Carregar questões na página
@@ -153,6 +62,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 input.value = opt.substring(0, 1);
                 input.id = `q${index}-${opt.substring(0, 1)}`;
                 
+                // Marcar prova como iniciada quando responder
+                input.addEventListener('change', function() {
+                    if (!examStarted) {
+                        examStarted = true;
+                        startMonitoring();
+                    }
+                });
+                
                 const label = document.createElement('label');
                 label.htmlFor = `q${index}-${opt.substring(0, 1)}`;
                 label.textContent = opt;
@@ -167,20 +84,31 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Verificar se o aluno está tentando colar
-    function checkForCheating() {
+    // Iniciar monitoramento após a primeira resposta
+    function startMonitoring() {
         // Verifica se a janela perdeu o foco
         window.addEventListener('blur', function() {
-            if (examStarted && !isCheating) {
+            if (!isCheating) {
                 startCheatTimer();
             }
         });
         
         // Verifica se a janela foi minimizada
         document.addEventListener('visibilitychange', function() {
-            if (document.hidden && examStarted && !isCheating) {
+            if (document.hidden && !isCheating) {
                 startCheatTimer();
             }
+        });
+        
+        // Prevenir Ctrl+C, Ctrl+V
+        document.addEventListener('copy', function(e) {
+            e.preventDefault();
+            startCheatTimer();
+        });
+        
+        document.addEventListener('cut', function(e) {
+            e.preventDefault();
+            startCheatTimer();
         });
     }
     
@@ -188,7 +116,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function startCheatTimer() {
         isCheating = true;
         cheatModal.style.display = 'flex';
-        cheatTimeLeft = 5 * 60; // Reset para 5 minutos
+        cheatTimeLeft = 5 * 60;
         
         updateCheatTimerDisplay();
         
@@ -198,7 +126,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             if (cheatTimeLeft <= 0) {
                 clearInterval(cheatInterval);
-                alert('Tempo esgotado! Você foi desqualificado por tentativa de cola.');
+                alert('Tempo esgotado! Você foi desqualificado por sair da tela da prova.');
                 location.reload();
             }
         }, 1000);
@@ -225,11 +153,14 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    // Mostrar gabarito
-    function showAnswerKey() {
-        keyBody.innerHTML = '';
-        
-        questions.forEach((q, index) => {
-            const row = document.createElement('tr');
-            
-            const}
+    // Event Listeners
+    passwordBtn.addEventListener('click', checkPassword);
+    passwordInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            checkPassword();
+        }
+    });
+    
+    // Inicialização
+    loadQuestions();
+});
