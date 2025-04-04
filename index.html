@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Avaliação - Sistema de Monitoramento</title>
+    <title>Avaliação - Desenvolvimento Web</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             max-width: 800px;
             margin: 0 auto;
             padding: 20px;
+            line-height: 1.6;
         }
         
         #aviso {
@@ -38,6 +39,11 @@
             border: none;
             cursor: pointer;
             margin-top: 20px;
+            border-radius: 4px;
+        }
+        
+        button:hover {
+            background-color: #45a049;
         }
         
         .questao {
@@ -52,20 +58,54 @@
             padding: 20px;
             background-color: #f9f9f9;
             border: 1px solid #ddd;
+            border-radius: 5px;
         }
         
-        .resposta-correta {
-            color: green;
+        .alternativas {
+            margin-left: 20px;
+        }
+        
+        .alternativa {
+            margin: 10px 0;
+            padding: 8px;
+            background-color: #f1f1f1;
+            border-radius: 4px;
+        }
+        
+        .alternativa:hover {
+            background-color: #e1e1e1;
+        }
+        
+        input[type="radio"] {
+            margin-right: 10px;
+        }
+        
+        #resumoRespostas {
+            margin-top: 20px;
+        }
+        
+        .resposta-item {
+            margin: 15px 0;
+            padding: 10px;
+            border-left: 4px solid #ddd;
+        }
+        
+        #tempoRestante {
             font-weight: bold;
+            color: #2c3e50;
         }
         
-        .resposta-incorreta {
-            color: red;
+        #nomeAluno {
+            padding: 8px;
+            width: 300px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
         }
     </style>
 </head>
 <body>
-    <h1>Avaliação de Programação</h1>
+    <h1>Avaliação de Conhecimentos em Desenvolvimento Web</h1>
     
     <div id="inicio">
         <p>Leia as instruções cuidadosamente:</p>
@@ -76,83 +116,213 @@
             <li>Mudanças de aba serão detectadas e penalizadas</li>
         </ul>
         <div id="formNome" style="margin-top: 20px;">
-            <label for="nomeAluno">Digite seu nome:</label>
+            <label for="nomeAluno">Digite seu nome completo:</label><br>
             <input type="text" id="nomeAluno" required>
         </div>
         <button id="iniciarProva">Iniciar Prova</button>
     </div>
     
     <div id="prova" style="display: none;">
-        <h2>Prova de Conhecimentos Gerais</h2>
+        <h2>Prova de Conhecimentos - GitHub, HTML, CSS e Ferramentas</h2>
         <p>Aluno: <span id="nomeAlunoExibicao"></span></p>
         
         <div class="questao">
-            <h3>Questão 1</h3>
-            <p>Qual é a capital do Brasil?</p>
-            <input type="text" id="resposta1">
+            <h3>Questão 1 (Básico)</h3>
+            <p>O que é o GitHub?</p>
+            <div class="alternativas">
+                <label class="alternativa">
+                    <input type="radio" name="q1" value="A"> Um serviço de e-mail profissional
+                </label>
+                <label class="alternativa">
+                    <input type="radio" name="q1" value="B"> Uma plataforma de hospedagem de código-fonte e controle de versão
+                </label>
+                <label class="alternativa">
+                    <input type="radio" name="q1" value="C"> Um editor de código online
+                </label>
+                <label class="alternativa">
+                    <input type="radio" name="q1" value="D"> Uma rede social para desenvolvedores
+                </label>
+            </div>
         </div>
         
         <div class="questao">
-            <h3>Questão 2</h3>
-            <p>2 + 2 = ?</p>
-            <input type="number" id="resposta2">
+            <h3>Questão 2 (Básico)</h3>
+            <p>Qual é a função principal do arquivo index.html em um projeto web?</p>
+            <div class="alternativas">
+                <label class="alternativa">
+                    <input type="radio" name="q2" value="A"> Armazenar as imagens do site
+                </label>
+                <label class="alternativa">
+                    <input type="radio" name="q2" value="B"> Ser a página inicial que o navegador carrega por padrão
+                </label>
+                <label class="alternativa">
+                    <input type="radio" name="q2" value="C"> Conter os estilos CSS do projeto
+                </label>
+                <label class="alternativa">
+                    <input type="radio" name="q2" value="D"> Guardar as credenciais de acesso ao site
+                </label>
+            </div>
         </div>
         
         <div class="questao">
-            <h3>Questão 3</h3>
-            <p>Quem pintou a Mona Lisa?</p>
-            <input type="text" id="resposta3">
+            <h3>Questão 3 (Básico)</h3>
+            <p>Qual tag HTML é usada para criar um cabeçalho de nível 1?</p>
+            <div class="alternativas">
+                <label class="alternativa">
+                    <input type="radio" name="q3" value="A"> &lt;header&gt;
+                </label>
+                <label class="alternativa">
+                    <input type="radio" name="q3" value="B"> &lt;h1&gt;
+                </label>
+                <label class="alternativa">
+                    <input type="radio" name="q3" value="C"> &lt;head&gt;
+                </label>
+                <label class="alternativa">
+                    <input type="radio" name="q3" value="D"> &lt;title&gt;
+                </label>
+            </div>
         </div>
         
         <div class="questao">
-            <h3>Questão 4</h3>
-            <p>Qual o maior planeta do sistema solar?</p>
-            <input type="text" id="resposta4">
+            <h3>Questão 4 (Intermediário)</h3>
+            <p>O que é o Gitpod e como abri-lo rapidamente para um repositório no GitHub?</p>
+            <div class="alternativas">
+                <label class="alternativa">
+                    <input type="radio" name="q4" value="A"> É um fórum para desenvolvedores - acessado pelo atalho (f)
+                </label>
+                <label class="alternativa">
+                    <input type="radio" name="q4" value="B"> É um ambiente de desenvolvimento online - aberto com o atalho (.)
+                </label>
+                <label class="alternativa">
+                    <input type="radio" name="q4" value="C"> É um sistema de tickets - acessado pelo atalho (t)
+                </label>
+                <label class="alternativa">
+                    <input type="radio" name="q4" value="D"> É um editor de imagens - aberto com o atalho (i)
+                </label>
+            </div>
         </div>
         
         <div class="questao">
-            <h3>Questão 5</h3>
-            <p>Quantos continentes existem no mundo?</p>
-            <input type="number" id="resposta5">
+            <h3>Questão 5 (Intermediário)</h3>
+            <p>Qual a finalidade de uma licença em um projeto de software no GitHub?</p>
+            <div class="alternativas">
+                <label class="alternativa">
+                    <input type="radio" name="q5" value="A"> Apenas para mostrar que o projeto é profissional
+                </label>
+                <label class="alternativa">
+                    <input type="radio" name="q5" value="B"> Definir como outras pessoas podem usar, modificar e distribuir o código
+                </label>
+                <label class="alternativa">
+                    <input type="radio" name="q5" value="C"> Proteger o código contra cópias não autorizadas
+                </label>
+                <label class="alternativa">
+                    <input type="radio" name="q5" value="D"> Garantir que apenas o autor possa ver o código
+                </label>
+            </div>
         </div>
         
         <div class="questao">
-            <h3>Questão 6</h3>
-            <p>Qual o nome do processo de transformação de lagarta em borboleta?</p>
-            <input type="text" id="resposta6">
+            <h3>Questão 6 (Intermediário)</h3>
+            <p>Qual propriedade CSS é usada para definir a cor de fundo de um elemento?</p>
+            <div class="alternativas">
+                <label class="alternativa">
+                    <input type="radio" name="q6" value="A"> color
+                </label>
+                <label class="alternativa">
+                    <input type="radio" name="q6" value="B"> background-color
+                </label>
+                <label class="alternativa">
+                    <input type="radio" name="q6" value="C"> bgcolor
+                </label>
+                <label class="alternativa">
+                    <input type="radio" name="q6" value="D"> background
+                </label>
+            </div>
         </div>
         
         <div class="questao">
-            <h3>Questão 7</h3>
-            <p>Qual o símbolo químico do ouro?</p>
-            <input type="text" id="resposta7">
+            <h3>Questão 7 (Intermediário)</h3>
+            <p>Qual formato de imagem é mais adequado para fotos com muitas cores e gradientes?</p>
+            <div class="alternativas">
+                <label class="alternativa">
+                    <input type="radio" name="q7" value="A"> PNG
+                </label>
+                <label class="alternativa">
+                    <input type="radio" name="q7" value="B"> JPG
+                </label>
+                <label class="alternativa">
+                    <input type="radio" name="q7" value="C"> SVG
+                </label>
+                <label class="alternativa">
+                    <input type="radio" name="q7" value="D"> GIF
+                </label>
+            </div>
         </div>
         
         <div class="questao">
-            <h3>Questão 8</h3>
-            <p>Quem escreveu "Dom Quixote"?</p>
-            <input type="text" id="resposta8">
+            <h3>Questão 8 (Avançado)</h3>
+            <p>Qual é a representação RGB para a cor branca?</p>
+            <div class="alternativas">
+                <label class="alternativa">
+                    <input type="radio" name="q8" value="A"> rgb(0, 0, 0)
+                </label>
+                <label class="alternativa">
+                    <input type="radio" name="q8" value="B"> rgb(255, 0, 0)
+                </label>
+                <label class="alternativa">
+                    <input type="radio" name="q8" value="C"> rgb(255, 255, 255)
+                </label>
+                <label class="alternativa">
+                    <input type="radio" name="q8" value="D"> rgb(128, 128, 128)
+                </label>
+            </div>
         </div>
         
         <div class="questao">
-            <h3>Questão 9</h3>
-            <p>Qual oceano banha o litoral brasileiro?</p>
-            <input type="text" id="resposta9">
+            <h3>Questão 9 (Avançado)</h3>
+            <p>Qual é a principal vantagem de usar classes em CSS?</p>
+            <div class="alternativas">
+                <label class="alternativa">
+                    <input type="radio" name="q9" value="A"> Permitir a reutilização de estilos em múltiplos elementos
+                </label>
+                <label class="alternativa">
+                    <input type="radio" name="q9" value="B"> Reduzir o tamanho do arquivo HTML
+                </label>
+                <label class="alternativa">
+                    <input type="radio" name="q9" value="C"> Aumentar a velocidade de carregamento da página
+                </label>
+                <label class="alternativa">
+                    <input type="radio" name="q9" value="D"> Substituir a necessidade de JavaScript
+                </label>
+            </div>
         </div>
         
         <div class="questao">
-            <h3>Questão 10</h3>
-            <p>Em que ano o homem pisou na Lua pela primeira vez?</p>
-            <input type="number" id="resposta10">
+            <h3>Questão 10 (Avançado)</h3>
+            <p>Qual dessas ferramentas NÃO é um assistente de IA para programação?</p>
+            <div class="alternativas">
+                <label class="alternativa">
+                    <input type="radio" name="q10" value="A"> ChatGPT
+                </label>
+                <label class="alternativa">
+                    <input type="radio" name="q10" value="B"> DeepSeek
+                </label>
+                <label class="alternativa">
+                    <input type="radio" name="q10" value="C"> AluraStart
+                </label>
+                <label class="alternativa">
+                    <input type="radio" name="q10" value="D"> GitHub Copilot
+                </label>
+            </div>
         </div>
         
         <button id="finalizar">Finalizar Prova</button>
     </div>
     
     <div id="gabarito">
-        <h2>Seu Gabarito</h2>
+        <h2>Seu Resumo de Respostas</h2>
         <p>Aluno: <span id="nomeAlunoGabarito"></span></p>
-        <div id="respostasAluno"></div>
+        <div id="resumoRespostas"></div>
         <button id="voltarInicio">Voltar ao Início</button>
     </div>
     
@@ -181,24 +351,102 @@
         const nomeAlunoInput = document.getElementById('nomeAluno');
         const nomeAlunoExibicao = document.getElementById('nomeAlunoExibicao');
         const nomeAlunoGabarito = document.getElementById('nomeAlunoGabarito');
-        const respostasAlunoDiv = document.getElementById('respostasAluno');
+        const resumoRespostasDiv = document.getElementById('resumoRespostas');
         const iniciarBtn = document.getElementById('iniciarProva');
         const finalizarBtn = document.getElementById('finalizar');
         const retomarBtn = document.getElementById('retomarProva');
         const voltarInicioBtn = document.getElementById('voltarInicio');
         
-        // Respostas corretas (pode ser expandido)
+        // Respostas corretas (não exibidas ao aluno)
         const respostasCorretas = {
-            1: "Brasília",
-            2: 4,
-            3: "Leonardo da Vinci",
-            4: "Júpiter",
-            5: 7,
-            6: "Metamorfose",
-            7: "Au",
-            8: "Miguel de Cervantes",
-            9: "Atlântico",
-            10: 1969
+            1: "B",
+            2: "B",
+            3: "B",
+            4: "B",
+            5: "B",
+            6: "B",
+            7: "B",
+            8: "C",
+            9: "A",
+            10: "C"
+        };
+        
+        // Textos das questões para exibir no gabarito
+        const textosQuestoes = {
+            1: "O que é o GitHub?",
+            2: "Qual é a função principal do arquivo index.html em um projeto web?",
+            3: "Qual tag HTML é usada para criar um cabeçalho de nível 1?",
+            4: "O que é o Gitpod e como abri-lo rapidamente para um repositório no GitHub?",
+            5: "Qual a finalidade de uma licença em um projeto de software no GitHub?",
+            6: "Qual propriedade CSS é usada para definir a cor de fundo de um elemento?",
+            7: "Qual formato de imagem é mais adequado para fotos com muitas cores e gradientes?",
+            8: "Qual é a representação RGB para a cor branca?",
+            9: "Qual é a principal vantagem de usar classes em CSS?",
+            10: "Qual dessas ferramentas NÃO é um assistente de IA para programação?"
+        };
+        
+        // Opções de cada questão para exibir no gabarito
+        const opcoesQuestoes = {
+            1: {
+                "A": "Um serviço de e-mail profissional",
+                "B": "Uma plataforma de hospedagem de código-fonte e controle de versão",
+                "C": "Um editor de código online",
+                "D": "Uma rede social para desenvolvedores"
+            },
+            2: {
+                "A": "Armazenar as imagens do site",
+                "B": "Ser a página inicial que o navegador carrega por padrão",
+                "C": "Conter os estilos CSS do projeto",
+                "D": "Guardar as credenciais de acesso ao site"
+            },
+            3: {
+                "A": "&lt;header&gt;",
+                "B": "&lt;h1&gt;",
+                "C": "&lt;head&gt;",
+                "D": "&lt;title&gt;"
+            },
+            4: {
+                "A": "É um fórum para desenvolvedores - acessado pelo atalho (f)",
+                "B": "É um ambiente de desenvolvimento online - aberto com o atalho (.)",
+                "C": "É um sistema de tickets - acessado pelo atalho (t)",
+                "D": "É um editor de imagens - aberto com o atalho (i)"
+            },
+            5: {
+                "A": "Apenas para mostrar que o projeto é profissional",
+                "B": "Definir como outras pessoas podem usar, modificar e distribuir o código",
+                "C": "Proteger o código contra cópias não autorizadas",
+                "D": "Garantir que apenas o autor possa ver o código"
+            },
+            6: {
+                "A": "color",
+                "B": "background-color",
+                "C": "bgcolor",
+                "D": "background"
+            },
+            7: {
+                "A": "PNG",
+                "B": "JPG",
+                "C": "SVG",
+                "D": "GIF"
+            },
+            8: {
+                "A": "rgb(0, 0, 0)",
+                "B": "rgb(255, 0, 0)",
+                "C": "rgb(255, 255, 255)",
+                "D": "rgb(128, 128, 128)"
+            },
+            9: {
+                "A": "Permitir a reutilização de estilos em múltiplos elementos",
+                "B": "Reduzir o tamanho do arquivo HTML",
+                "C": "Aumentar a velocidade de carregamento da página",
+                "D": "Substituir a necessidade de JavaScript"
+            },
+            10: {
+                "A": "ChatGPT",
+                "B": "DeepSeek",
+                "C": "AluraStart",
+                "D": "GitHub Copilot"
+            }
         };
         
         // Event Listeners
@@ -278,6 +526,21 @@
         
         // Função para finalizar a prova
         function finalizarProva() {
+            // Verificar se todas as questões foram respondidas
+            let todasRespondidas = true;
+            for (let i = 1; i <= 10; i++) {
+                if (!document.querySelector(`input[name="q${i}"]:checked`)) {
+                    todasRespondidas = false;
+                    break;
+                }
+            }
+            
+            if (!todasRespondidas) {
+                if (!confirm('Você não respondeu todas as questões. Deseja realmente finalizar?')) {
+                    return;
+                }
+            }
+            
             provaIniciada = false;
             clearInterval(intervaloContador);
             
@@ -285,34 +548,31 @@
             window.removeEventListener('blur', verificarMudancaAba);
             document.removeEventListener('visibilitychange', verificarVisibilidade);
             
-            // Gerar gabarito
-            gerarGabarito();
+            // Gerar resumo das respostas
+            gerarResumoRespostas();
             
-            // Mostrar gabarito
+            // Mostrar resumo
             provaDiv.style.display = 'none';
             gabaritoDiv.style.display = 'block';
         }
         
-        // Função para gerar o gabarito
-        function gerarGabarito() {
+        // Função para gerar o resumo das respostas (sem mostrar as corretas)
+        function gerarResumoRespostas() {
             nomeAlunoGabarito.textContent = nomeAlunoInput.value.trim();
-            respostasAlunoDiv.innerHTML = '';
+            resumoRespostasDiv.innerHTML = '';
             
             for (let i = 1; i <= 10; i++) {
-                const respostaElement = document.getElementById(`resposta${i}`);
-                const respostaAluno = respostaElement ? respostaElement.value : '';
-                const respostaCorreta = respostasCorretas[i];
-                const estaCorreta = String(respostaAluno).toLowerCase() === String(respostaCorreta).toLowerCase();
+                const respostaSelecionada = document.querySelector(`input[name="q${i}"]:checked`);
+                const respostaAluno = respostaSelecionada ? respostaSelecionada.value : '[Não respondida]';
                 
                 const questaoDiv = document.createElement('div');
-                questaoDiv.className = `questao ${estaCorreta ? 'resposta-correta' : 'resposta-incorreta'}`;
+                questaoDiv.className = 'resposta-item';
                 questaoDiv.innerHTML = `
-                    <h3>Questão ${i}</h3>
-                    <p>Sua resposta: ${respostaAluno || "[Não respondida]"}</p>
-                    <p>Resposta correta: ${respostaCorreta}</p>
+                    <h3>Questão ${i}: ${textosQuestoes[i]}</h3>
+                    <p><strong>Sua resposta:</strong> ${opcoesQuestoes[i][respostaAluno] || respostaAluno}</p>
                 `;
                 
-                respostasAlunoDiv.appendChild(questaoDiv);
+                resumoRespostasDiv.appendChild(questaoDiv);
             }
         }
         
@@ -327,10 +587,8 @@
             
             // Limpar respostas
             for (let i = 1; i <= 10; i++) {
-                const respostaElement = document.getElementById(`resposta${i}`);
-                if (respostaElement) {
-                    respostaElement.value = '';
-                }
+                const radios = document.querySelectorAll(`input[name="q${i}"]`);
+                radios.forEach(radio => radio.checked = false);
             }
         }
     </script>
