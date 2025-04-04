@@ -102,6 +102,18 @@
             border: 1px solid #ddd;
             border-radius: 4px;
         }
+        
+        #senhaAcesso {
+            padding: 8px;
+            width: 200px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .senha-container {
+            margin: 20px 0;
+        }
     </style>
 </head>
 <body>
@@ -331,6 +343,13 @@
         <p>Você mudou de aba ou minimizou a janela!</p>
         <p>Tentativas restantes: <span id="contadorTentativas">3</span></p>
         <p>Se continuar, sua prova será automaticamente encerrada.</p>
+        
+        <div class="senha-container">
+            <p>Digite a senha para continuar:</p>
+            <input type="password" id="senhaAcesso" placeholder="Digite a senha">
+            <button id="verificarSenha">Verificar</button>
+        </div>
+        
         <button id="retomarProva">Retomar Prova</button>
     </div>
 
@@ -340,6 +359,7 @@
         let tentativasRestantes = 3;
         let tempoRestante = 30 * 60; // 30 minutos em segundos
         let intervaloContador;
+        const SENHA_CORRETA = "12071997";
         
         // Elementos DOM
         const inicioDiv = document.getElementById('inicio');
@@ -356,6 +376,8 @@
         const finalizarBtn = document.getElementById('finalizar');
         const retomarBtn = document.getElementById('retomarProva');
         const voltarInicioBtn = document.getElementById('voltarInicio');
+        const verificarSenhaBtn = document.getElementById('verificarSenha');
+        const senhaAcessoInput = document.getElementById('senhaAcesso');
         
         // Respostas corretas (não exibidas ao aluno)
         const respostasCorretas = {
@@ -454,6 +476,24 @@
         finalizarBtn.addEventListener('click', finalizarProva);
         retomarBtn.addEventListener('click', retomarProva);
         voltarInicioBtn.addEventListener('click', voltarInicio);
+        verificarSenhaBtn.addEventListener('click', verificarSenha);
+        
+        // Adicionar evento de tecla para a senha (Enter)
+        senhaAcessoInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                verificarSenha();
+            }
+        });
+        
+        // Função para verificar a senha
+        function verificarSenha() {
+            if (senhaAcessoInput.value === SENHA_CORRETA) {
+                avisoDiv.style.display = 'none';
+                senhaAcessoInput.value = '';
+            } else {
+                alert('Senha incorreta!');
+            }
+        }
         
         // Função para iniciar a prova
         function iniciarProva() {
