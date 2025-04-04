@@ -82,6 +82,8 @@
         
         #resumoRespostas {
             margin-top: 20px;
+            font-family: monospace;
+            white-space: pre;
         }
         
         .resposta-item {
@@ -113,6 +115,20 @@
         
         .senha-container {
             margin: 20px 0;
+        }
+        
+        #emailForm {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+        }
+        
+        #emailForm input {
+            padding: 8px;
+            margin: 5px 0;
+            width: 100%;
+            box-sizing: border-box;
         }
     </style>
 </head>
@@ -335,6 +351,15 @@
         <h2>Seu Resumo de Respostas</h2>
         <p>Aluno: <span id="nomeAlunoGabarito"></span></p>
         <div id="resumoRespostas"></div>
+        
+        <div id="emailForm">
+            <h3>Enviar resultados por e-mail</h3>
+            <p>Preencha abaixo para enviar seus resultados para o professor:</p>
+            <input type="email" id="emailAluno" placeholder="Seu e-mail" required>
+            <button id="enviarEmail">Enviar Resultados</button>
+            <p id="statusEnvio"></p>
+        </div>
+        
         <button id="voltarInicio">Voltar ao Início</button>
     </div>
     
@@ -349,8 +374,6 @@
             <input type="password" id="senhaAcesso" placeholder="Digite a senha">
             <button id="verificarSenha">Verificar</button>
         </div>
-        
-        <button id="retomarProva">Retomar Prova</button>
     </div>
 
     <script>
@@ -360,6 +383,7 @@
         let tempoRestante = 30 * 60; // 30 minutos em segundos
         let intervaloContador;
         const SENHA_CORRETA = "12071997";
+        const EMAIL_PROFESSOR = "de.medeiros.gustavo@escola.pr.gov.br";
         
         // Elementos DOM
         const inicioDiv = document.getElementById('inicio');
@@ -374,10 +398,12 @@
         const resumoRespostasDiv = document.getElementById('resumoRespostas');
         const iniciarBtn = document.getElementById('iniciarProva');
         const finalizarBtn = document.getElementById('finalizar');
-        const retomarBtn = document.getElementById('retomarProva');
         const voltarInicioBtn = document.getElementById('voltarInicio');
         const verificarSenhaBtn = document.getElementById('verificarSenha');
         const senhaAcessoInput = document.getElementById('senhaAcesso');
+        const enviarEmailBtn = document.getElementById('enviarEmail');
+        const emailAlunoInput = document.getElementById('emailAluno');
+        const statusEnvioP = document.getElementById('statusEnvio');
         
         // Respostas corretas (não exibidas ao aluno)
         const respostasCorretas = {
@@ -393,90 +419,12 @@
             10: "C"
         };
         
-        // Textos das questões para exibir no gabarito
-        const textosQuestoes = {
-            1: "O que é o GitHub?",
-            2: "Qual é a função principal do arquivo index.html em um projeto web?",
-            3: "Qual tag HTML é usada para criar um cabeçalho de nível 1?",
-            4: "O que é o Gitpod e como abri-lo rapidamente para um repositório no GitHub?",
-            5: "Qual a finalidade de uma licença em um projeto de software no GitHub?",
-            6: "Qual propriedade CSS é usada para definir a cor de fundo de um elemento?",
-            7: "Qual formato de imagem é mais adequado para fotos com muitas cores e gradientes?",
-            8: "Qual é a representação RGB para a cor branca?",
-            9: "Qual é a principal vantagem de usar classes em CSS?",
-            10: "Qual dessas ferramentas NÃO é um assistente de IA para programação?"
-        };
-        
-        // Opções de cada questão para exibir no gabarito
-        const opcoesQuestoes = {
-            1: {
-                "A": "Um serviço de e-mail profissional",
-                "B": "Uma plataforma de hospedagem de código-fonte e controle de versão",
-                "C": "Um editor de código online",
-                "D": "Uma rede social para desenvolvedores"
-            },
-            2: {
-                "A": "Armazenar as imagens do site",
-                "B": "Ser a página inicial que o navegador carrega por padrão",
-                "C": "Conter os estilos CSS do projeto",
-                "D": "Guardar as credenciais de acesso ao site"
-            },
-            3: {
-                "A": "&lt;header&gt;",
-                "B": "&lt;h1&gt;",
-                "C": "&lt;head&gt;",
-                "D": "&lt;title&gt;"
-            },
-            4: {
-                "A": "É um fórum para desenvolvedores - acessado pelo atalho (f)",
-                "B": "É um ambiente de desenvolvimento online - aberto com o atalho (.)",
-                "C": "É um sistema de tickets - acessado pelo atalho (t)",
-                "D": "É um editor de imagens - aberto com o atalho (i)"
-            },
-            5: {
-                "A": "Apenas para mostrar que o projeto é profissional",
-                "B": "Definir como outras pessoas podem usar, modificar e distribuir o código",
-                "C": "Proteger o código contra cópias não autorizadas",
-                "D": "Garantir que apenas o autor possa ver o código"
-            },
-            6: {
-                "A": "color",
-                "B": "background-color",
-                "C": "bgcolor",
-                "D": "background"
-            },
-            7: {
-                "A": "PNG",
-                "B": "JPG",
-                "C": "SVG",
-                "D": "GIF"
-            },
-            8: {
-                "A": "rgb(0, 0, 0)",
-                "B": "rgb(255, 0, 0)",
-                "C": "rgb(255, 255, 255)",
-                "D": "rgb(128, 128, 128)"
-            },
-            9: {
-                "A": "Permitir a reutilização de estilos em múltiplos elementos",
-                "B": "Reduzir o tamanho do arquivo HTML",
-                "C": "Aumentar a velocidade de carregamento da página",
-                "D": "Substituir a necessidade de JavaScript"
-            },
-            10: {
-                "A": "ChatGPT",
-                "B": "DeepSeek",
-                "C": "AluraStart",
-                "D": "GitHub Copilot"
-            }
-        };
-        
         // Event Listeners
         iniciarBtn.addEventListener('click', iniciarProva);
         finalizarBtn.addEventListener('click', finalizarProva);
-        retomarBtn.addEventListener('click', retomarProva);
         voltarInicioBtn.addEventListener('click', voltarInicio);
         verificarSenhaBtn.addEventListener('click', verificarSenha);
+        enviarEmailBtn.addEventListener('click', enviarEmail);
         
         // Adicionar evento de tecla para a senha (Enter)
         senhaAcessoInput.addEventListener('keypress', function(e) {
@@ -493,6 +441,49 @@
             } else {
                 alert('Senha incorreta!');
             }
+        }
+        
+        // Função para enviar e-mail (simulado)
+        function enviarEmail() {
+            if (!emailAlunoInput.value) {
+                alert("Por favor, digite seu e-mail.");
+                return;
+            }
+            
+            statusEnvioP.textContent = "Enviando...";
+            statusEnvioP.style.color = "blue";
+            
+            // Simular envio de e-mail (na prática isso exigiria um backend)
+            const nomeAluno = nomeAlunoInput.value.trim();
+            const emailAluno = emailAlunoInput.value.trim();
+            const respostas = gerarTextoRespostas();
+            
+            // Criar link mailto (funcionará se o cliente de e-mail estiver configurado)
+            const assunto = `Resultado da Prova - ${nomeAluno}`;
+            const corpo = `Segue o gabarito do aluno:\n\n${respostas}\n\nEnviado por: ${emailAluno}`;
+            
+            const mailtoLink = `mailto:${EMAIL_PROFESSOR}?subject=${encodeURIComponent(assunto)}&body=${encodeURIComponent(corpo)}`;
+            
+            // Abrir cliente de e-mail
+            setTimeout(() => {
+                window.location.href = mailtoLink;
+                statusEnvioP.textContent = "Clique no botão de enviar no seu cliente de e-mail que abriu.";
+                statusEnvioP.style.color = "green";
+            }, 1000);
+        }
+        
+        // Função para gerar texto simples das respostas
+        function gerarTextoRespostas() {
+            let texto = `Aluno: ${nomeAlunoInput.value.trim()}\n\n`;
+            
+            for (let i = 1; i <= 10; i++) {
+                const respostaSelecionada = document.querySelector(`input[name="q${i}"]:checked`);
+                const respostaAluno = respostaSelecionada ? respostaSelecionada.value : 'Não respondida';
+                
+                texto += `Questão ${i} (${respostaAluno})\n`;
+            }
+            
+            return texto;
         }
         
         // Função para iniciar a prova
@@ -559,11 +550,6 @@
             }
         }
         
-        // Função para retomar a prova
-        function retomarProva() {
-            avisoDiv.style.display = 'none';
-        }
-        
         // Função para finalizar a prova
         function finalizarProva() {
             // Verificar se todas as questões foram respondidas
@@ -596,24 +582,20 @@
             gabaritoDiv.style.display = 'block';
         }
         
-        // Função para gerar o resumo das respostas (sem mostrar as corretas)
+        // Função para gerar o resumo das respostas no formato solicitado
         function gerarResumoRespostas() {
             nomeAlunoGabarito.textContent = nomeAlunoInput.value.trim();
-            resumoRespostasDiv.innerHTML = '';
+            
+            let textoRespostas = `Aluno: ${nomeAlunoInput.value.trim()}\n\n`;
             
             for (let i = 1; i <= 10; i++) {
                 const respostaSelecionada = document.querySelector(`input[name="q${i}"]:checked`);
-                const respostaAluno = respostaSelecionada ? respostaSelecionada.value : '[Não respondida]';
+                const respostaAluno = respostaSelecionada ? respostaSelecionada.value : 'Não respondida';
                 
-                const questaoDiv = document.createElement('div');
-                questaoDiv.className = 'resposta-item';
-                questaoDiv.innerHTML = `
-                    <h3>Questão ${i}: ${textosQuestoes[i]}</h3>
-                    <p><strong>Sua resposta:</strong> ${opcoesQuestoes[i][respostaAluno] || respostaAluno}</p>
-                `;
-                
-                resumoRespostasDiv.appendChild(questaoDiv);
+                textoRespostas += `Questão ${i} (${respostaAluno})\n`;
             }
+            
+            resumoRespostasDiv.textContent = textoRespostas;
         }
         
         // Função para voltar ao início
@@ -630,6 +612,10 @@
                 const radios = document.querySelectorAll(`input[name="q${i}"]`);
                 radios.forEach(radio => radio.checked = false);
             }
+            
+            // Limpar e-mail
+            emailAlunoInput.value = '';
+            statusEnvioP.textContent = '';
         }
     </script>
 </body>
