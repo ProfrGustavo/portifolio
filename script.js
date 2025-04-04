@@ -232,4 +232,4 @@ document.addEventListener('DOMContentLoaded', function() {
         questions.forEach((q, index) => {
             const row = document.createElement('tr');
             
-            const
+            const}
