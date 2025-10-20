@@ -27,106 +27,47 @@
         <p class="error" id="errorMsg">Senha incorreta! Tente novamente.</p>
     </div>
 
-    <!-- Quiz -->
-    <div class="quiz-container" id="quizContainer">
-        <h1>📝 Quiz - Cidadania Digital</h1>
-        <p>Responda as questões abaixo sobre cidadania digital:</p>
-        
-        <form id="quizForm">
-            <div class="question">
-                <h3>1. O que é cidadania digital?</h3>
-                <div class="options">
-                    <label><input type="radio" name="q1" value="a"> a) Uso de tecnologias apenas para entretenimento</label>
-                    <label><input type="radio" name="q1" value="b"> b) Conjunto de direitos e deveres no ambiente digital</label>
-                    <label><input type="radio" name="q1" value="c"> c) Compra e venda de produtos online</label>
-                </div>
-            </div>
-
-            <div class="question">
-                <h3>2. Qual destes é um exemplo de netiqueta?</h3>
-                <div class="options">
-                    <label><input type="radio" name="q2" value="a"> a) Escrever em letras maiúsculas</label>
-                    <label><input type="radio" name="q2" value="b"> b) Respeitar a opinião dos outros</label>
-                    <label><input type="radio" name="q2" value="c"> c) Compartilhar senhas com amigos</label>
-                </div>
-            </div>
-
-            <div class="question">
-                <h3>3. O que caracteriza cyberbullying?</h3>
-                <div class="options">
-                    <label><input type="radio" name="q3" value="a"> a) Fazer compras online</label>
-                    <label><input type="radio" name="q3" value="b"> b) Agressão moral através da internet</label>
-                    <label><input type="radio" name="q3" value="c"> c) Usar redes sociais</label>
-                </div>
-            </div>
-
-            <div class="question">
-                <h3>4. Por que é importante ter senhas fortes?</h3>
-                <div class="options">
-                    <label><input type="radio" name="q4" value="a"> a) Para dificultar a memorização</label>
-                    <label><input type="radio" name="q4" value="b"> b) Proteger contra acesso não autorizado</label>
-                    <label><input type="radio" name="q4" value="c"> c) Para impressionar os amigos</label>
-                </div>
-            </div>
-
-            <div class="question">
-                <h3>5. O que é phishing?</h3>
-                <div class="options">
-                    <label><input type="radio" name="q5" value="a"> a) Tipo de pescaria esportiva</label>
-                    <label><input type="radio" name="q5" value="b"> b) Técnica para enganar e obter dados pessoais</label>
-                    <label><input type="radio" name="q5" value="c"> c) Forma de fazer novos amigos online</label>
-                </div>
-            </div>
-
-            <div class="question">
-                <h3>6. Qual é a idade mínima para usar redes sociais como Facebook e Instagram?</h3>
-                <div class="options">
-                    <label><input type="radio" name="q6" value="a"> a) 10 anos</label>
-                    <label><input type="radio" name="q6" value="b"> b) 13 anos</label>
-                    <label><input type="radio" name="q6" value="c"> c) 16 anos</label>
-                </div>
-            </div>
-
-            <div class="question">
-                <h3>7. O que significa LGPD?</h3>
-                <div class="options">
-                    <label><input type="radio" name="q7" value="a"> a) Lei Geral de Proteção de Dados</label>
-                    <label><input type="radio" name="q7" value="b"> b) Liga de Games Profissionais Digitais</label>
-                    <label><input type="radio" name="q7" value="c"> c) Licença Geral para Publicação Digital</label>
-                </div>
-            </div>
-
-            <div class="question">
-                <h3>8. Qual destes é um comportamento seguro online?</h3>
-                <div class="options">
-                    <label><input type="radio" name="q8" value="a"> a) Compartilhar localização em tempo real</label>
-                    <label><input type="radio" name="q8" value="b"> b) Usar redes Wi-Fi públicas para transações bancárias</label>
-                    <label><input type="radio" name="q8" value="c"> c) Verificar a segurança dos sites antes de informar dados</label>
-                </div>
-            </div>
-
-            <div class="question">
-                <h3>9. O que é direito ao esquecimento na internet?</h3>
-                <div class="options">
-                    <label><input type="radio" name="q9" value="a"> a) Esquecer suas próprias senhas</label>
-                    <label><input type="radio" name="q9" value="b"> b) Possibilidade de remover informações pessoais desatualizadas</label>
-                    <label><input type="radio" name="q9" value="c"> c) Deletar fotos antigas do celular</label>
-                </div>
-            </div>
-
-            <div class="question">
-                <h3>10. Qual a importância da verificação de informações nas redes sociais?</h3>
-                <div class="options">
-                    <label><input type="radio" name="q10" value="a"> a) Aumentar o número de seguidores</label>
-                    <label><input type="radio" name="q10" value="b"> b) Combater fake news e desinformação</label>
-                    <label><input type="radio" name="q10" value="c"> c) Tornar o perfil mais popular</label>
-                </div>
-            </div>
-
-            <button type="button" onclick="submitQuiz()">Enviar Respostas</button>
-        </form>
+    <!-- Tela de carregamento -->
+    <div class="quiz-container" id="loadingContainer" style="display: none;">
+        <h1>📝 Preparando seu Quiz...</h1>
+        <p>Sorteando suas questões personalizadas...</p>
+        <div class="loading-spinner"></div>
     </div>
 
+    <!-- Quiz -->
+    <div class="quiz-container" id="quizContainer" style="display: none;">
+        <div class="quiz-header">
+            <div class="timer" id="timer">30:00</div>
+            <div class="progress" id="progress">Questão 1/10</div>
+        </div>
+
+        <h1>📝 Quiz - Cidadania Digital</h1>
+        
+        <div class="question-container">
+            <div class="question" id="currentQuestion">
+                <!-- Questão será inserida aqui pelo JavaScript -->
+            </div>
+            
+            <div class="navigation">
+                <button type="button" onclick="previousQuestion()" id="prevBtn" disabled>Anterior</button>
+                <button type="button" onclick="nextQuestion()" id="nextBtn">Próxima</button>
+                <button type="button" onclick="submitQuiz()" id="submitBtn" style="display: none;">Finalizar Quiz</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Resultado -->
+    <div class="result-container" id="resultContainer" style="display: none;">
+        <h1>🎯 Resultado do Quiz</h1>
+        <div class="score" id="score">0/10</div>
+        <div class="time-info" id="timeInfo"></div>
+        <div class="answers-review" id="answersReview">
+            <!-- Revisão das respostas -->
+        </div>
+        <button onclick="restartQuiz()">Fazer Novo Quiz</button>
+    </div>
+
+    <script src="questions.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

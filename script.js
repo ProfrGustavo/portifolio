@@ -1,5 +1,11 @@
-// Variável para controlar se já detectou trapaça
+// Variáveis globais
 let cheatDetected = false;
+let selectedQuestions = [];
+let currentQuestionIndex = 0;
+let userAnswers = [];
+let quizStarted = false;
+let timeLeft = 30 * 60; // 30 minutos em segundos
+let timerInterval;
 
 // Verificação de senha com regex
 function checkPassword() {
@@ -11,11 +17,210 @@ function checkPassword() {
     
     if (passwordRegex.test(password)) {
         document.getElementById('loginContainer').style.display = 'none';
-        document.getElementById('quizContainer').style.display = 'block';
-        startQuizMonitoring();
+        document.getElementById('loadingContainer').style.display = 'block';
+        
+        // Pequeno delay para mostrar o loading
+        setTimeout(() => {
+            initializeQuiz();
+        }, 1500);
+        
     } else {
         errorMsg.style.display = 'block';
     }
+}
+
+// Inicializar o quiz
+function initializeQuiz() {
+    // Sortear 10 questões aleatórias
+    selectedQuestions = getRandomQuestions(10);
+    
+    // Inicializar array de respostas
+    userAnswers = new Array(selectedQuestions.length).fill(null);
+    
+    // Mostrar quiz
+    document.getElementById('loadingContainer').style.display = 'none';
+    document.getElementById('quizContainer').style.display = 'block';
+    
+    // Iniciar monitoramento e timer
+    startQuizMonitoring();
+    startTimer();
+    
+    // Mostrar primeira questão
+    showQuestion(0);
+}
+
+// Sortear questões aleatórias
+function getRandomQuestions(count) {
+    const shuffled = [...questionBank].sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, count);
+}
+
+// Mostrar questão atual
+function showQuestion(index) {
+    currentQuestionIndex = index;
+    const question = selectedQuestions[index];
+    const questionElement = document.getElementById('currentQuestion');
+    
+    // Atualizar progresso
+    document.getElementById('progress').textContent = `Questão ${index + 1}/${selectedQuestions.length}`;
+    
+    // Construir HTML da questão
+    let questionHTML = `<div class="question-text">${question.question}</div>`;
+    questionHTML += '<div class="options">';
+    
+    question.options.forEach((option, optionIndex) => {
+        const isChecked = userAnswers[index] === optionIndex ? 'checked' : '';
+        questionHTML += `
+            <label>
+                <input type="radio" name="answer" value="${optionIndex}" ${isChecked} onchange="saveAnswer(${optionIndex})">
+                <span>${option}</span>
+            </label>
+        `;
+    });
+    
+    questionHTML += '</div>';
+    questionElement.innerHTML = questionHTML;
+    
+    // Atualizar botões de navegação
+    updateNavigationButtons();
+}
+
+// Salvar resposta
+function saveAnswer(optionIndex) {
+    userAnswers[currentQuestionIndex] = optionIndex;
+    updateNavigationButtons();
+}
+
+// Atualizar botões de navegação
+function updateNavigationButtons() {
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const submitBtn = document.getElementById('submitBtn');
+    
+    // Botão anterior
+    prevBtn.disabled = currentQuestionIndex === 0;
+    
+    // Botão próximo/submit
+    const hasAnswer = userAnswers[currentQuestionIndex] !== null;
+    
+    if (currentQuestionIndex === selectedQuestions.length - 1) {
+        nextBtn.style.display = 'none';
+        submitBtn.style.display = 'inline-block';
+        submitBtn.disabled = !hasAnswer;
+    } else {
+        nextBtn.style.display = 'inline-block';
+        submitBtn.style.display = 'none';
+        nextBtn.disabled = !hasAnswer;
+    }
+}
+
+// Navegar para próxima questão
+function nextQuestion() {
+    if (currentQuestionIndex < selectedQuestions.length - 1) {
+        showQuestion(currentQuestionIndex + 1);
+    }
+}
+
+// Navegar para questão anterior
+function previousQuestion() {
+    if (currentQuestionIndex > 0) {
+        showQuestion(currentQuestionIndex - 1);
+    }
+}
+
+// Timer
+function startTimer() {
+    updateTimerDisplay();
+    timerInterval = setInterval(() => {
+        timeLeft--;
+        updateTimerDisplay();
+        
+        if (timeLeft <= 0) {
+            clearInterval(timerInterval);
+            submitQuiz();
+        }
+    }, 1000);
+}
+
+function updateTimerDisplay() {
+    const minutes = Math.floor(timeLeft / 60);
+    const seconds = timeLeft % 60;
+    document.getElementById('timer').textContent = 
+        `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    
+    // Mudar cor quando o tempo estiver acabando
+    if (timeLeft < 300) { // 5 minutos
+        document.getElementById('timer').style.color = '#dc3545';
+        document.getElementById('timer').style.animation = 'pulse 1s infinite';
+    }
+}
+
+// Submissão do quiz
+function submitQuiz() {
+    clearInterval(timerInterval);
+    
+    // Calcular pontuação
+    const score = calculateScore();
+    const timeUsed = 30 * 60 - timeLeft;
+    const minutesUsed = Math.floor(timeUsed / 60);
+    const secondsUsed = timeUsed % 60;
+    
+    // Mostrar resultado
+    document.getElementById('quizContainer').style.display = 'none';
+    document.getElementById('resultContainer').style.display = 'block';
+    
+    document.getElementById('score').textContent = `${score}/${selectedQuestions.length}`;
+    document.getElementById('timeInfo').textContent = 
+        `Tempo utilizado: ${minutesUsed}min ${secondsUsed}s`;
+    
+    showAnswersReview();
+}
+
+// Calcular pontuação
+function calculateScore() {
+    let score = 0;
+    selectedQuestions.forEach((question, index) => {
+        if (userAnswers[index] === question.correct) {
+            score++;
+        }
+    });
+    return score;
+}
+
+// Mostrar revisão de respostas
+function showAnswersReview() {
+    const reviewElement = document.getElementById('answersReview');
+    let reviewHTML = '<h3>Revisão das suas respostas:</h3>';
+    
+    selectedQuestions.forEach((question, index) => {
+        const userAnswer = userAnswers[index];
+        const isCorrect = userAnswer === question.correct;
+        const answerClass = isCorrect ? 'answer-correct' : 'answer-incorrect';
+        
+        reviewHTML += `
+            <div class="answer-item ${answerClass}">
+                <div class="question-text">${question.question}</div>
+                <div class="user-answer">Sua resposta: ${question.options[userAnswer]}</div>
+                ${!isCorrect ? `<div class="correct-answer">Resposta correta: ${question.options[question.correct]}</div>` : ''}
+            </div>
+        `;
+    });
+    
+    reviewElement.innerHTML = reviewHTML;
+}
+
+// Reiniciar quiz
+function restartQuiz() {
+    // Resetar variáveis
+    selectedQuestions = [];
+    currentQuestionIndex = 0;
+    userAnswers = [];
+    timeLeft = 30 * 60;
+    
+    // Mostrar tela de login
+    document.getElementById('resultContainer').style.display = 'none';
+    document.getElementById('loginContainer').style.display = 'block';
+    document.getElementById('password').value = '';
 }
 
 // Permitir Enter para enviar a senha
@@ -39,7 +244,6 @@ function startQuizMonitoring() {
     window.addEventListener('beforeunload', function(e) {
         if (!cheatDetected) {
             showCheatAlert();
-            // Não impede a saída, apenas mostra alerta
         }
     });
     
@@ -75,7 +279,6 @@ function showCheatAlert() {
     const alert = document.getElementById('cheatAlert');
     alert.style.display = 'block';
     
-    // Faz o alerta piscar
     let blinkCount = 0;
     const blinkInterval = setInterval(() => {
         alert.style.display = alert.style.display === 'none' ? 'block' : 'none';
@@ -93,35 +296,9 @@ function showRightClickAlert() {
     const alert = document.getElementById('rightClickAlert');
     alert.style.display = 'block';
     
-    // Esconde o alerta após 5 segundos
     setTimeout(() => {
         alert.style.display = 'none';
     }, 5000);
-}
-
-// Submissão do quiz
-function submitQuiz() {
-    // Verifica se todas as questões foram respondidas
-    const allAnswered = checkAllQuestionsAnswered();
-    
-    if (allAnswered) {
-        alert('Quiz enviado com sucesso! Em breve você receberá o resultado.');
-        // Aqui você pode adicionar a lógica para calcular a pontuação
-    } else {
-        alert('Por favor, responda todas as questões antes de enviar!');
-    }
-}
-
-// Verifica se todas as questões foram respondidas
-function checkAllQuestionsAnswered() {
-    for (let i = 1; i <= 10; i++) {
-        const questionName = 'q' + i;
-        const selected = document.querySelector(`input[name="${questionName}"]:checked`);
-        if (!selected) {
-            return false;
-        }
-    }
-    return true;
 }
 
 // Bloqueio de seleção de texto
@@ -132,3 +309,14 @@ document.addEventListener('selectstart', function(e) {
 document.addEventListener('copy', function(e) {
     e.preventDefault();
 });
+
+// Adicionar animação de pulso para o timer
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes pulse {
+        0% { opacity: 1; }
+        50% { opacity: 0.5; }
+        100% { opacity: 1; }
+    }
+`;
+document.head.appendChild(style);
