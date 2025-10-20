@@ -51,13 +51,10 @@ function startQuizMonitoring() {
         }
     });
 
-    // Bloqueia o botão direito do mouse
+    // Bloqueia o botão direito do mouse com mensagem específica
     document.addEventListener('contextmenu', function(e) {
         e.preventDefault();
-        if (!cheatDetected) {
-            showCheatAlert();
-            cheatDetected = true;
-        }
+        showRightClickAlert();
     });
 
     // Bloqueia alguns atalhos de teclado
@@ -73,7 +70,7 @@ function startQuizMonitoring() {
     });
 }
 
-// Mostrar alerta de trapaça
+// Mostrar alerta de trapaça (para sair da página)
 function showCheatAlert() {
     const alert = document.getElementById('cheatAlert');
     alert.style.display = 'block';
@@ -89,6 +86,17 @@ function showCheatAlert() {
             alert.style.display = 'block';
         }
     }, 300);
+}
+
+// Mostrar alerta específico para botão direito
+function showRightClickAlert() {
+    const alert = document.getElementById('rightClickAlert');
+    alert.style.display = 'block';
+    
+    // Esconde o alerta após 5 segundos
+    setTimeout(() => {
+        alert.style.display = 'none';
+    }, 5000);
 }
 
 // Submissão do quiz
