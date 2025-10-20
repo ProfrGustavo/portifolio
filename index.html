@@ -1,632 +1,501 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Avaliação - Desenvolvimento Web</title>
+    <title>Quiz Cidadania Digital</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             max-width: 800px;
             margin: 0 auto;
             padding: 20px;
-            line-height: 1.6;
+            background-color: #f5f5f5;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
         }
         
-        #aviso {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.9);
-            color: white;
-            z-index: 9999;
+        .login-container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             text-align: center;
-            padding-top: 20%;
         }
         
-        #contadorTentativas {
-            color: red;
-            font-weight: bold;
+        .quiz-container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: none;
+        }
+        
+        input[type="password"] {
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            margin: 10px 0;
         }
         
         button {
-            padding: 10px 20px;
             background-color: #4CAF50;
             color: white;
+            padding: 12px 24px;
             border: none;
+            border-radius: 5px;
             cursor: pointer;
-            margin-top: 20px;
-            border-radius: 4px;
+            font-size: 16px;
         }
         
         button:hover {
             background-color: #45a049;
         }
         
-        .questao {
-            margin-bottom: 30px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid #eee;
-        }
-        
-        #gabarito {
-            display: none;
-            margin-top: 30px;
-            padding: 20px;
-            background-color: #f9f9f9;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
-        
-        .alternativas {
-            margin-left: 20px;
-        }
-        
-        .alternativa {
-            margin: 10px 0;
-            padding: 8px;
-            background-color: #f1f1f1;
-            border-radius: 4px;
-        }
-        
-        .alternativa:hover {
-            background-color: #e1e1e1;
-        }
-        
-        input[type="radio"] {
-            margin-right: 10px;
-        }
-        
-        #resumoRespostas {
-            margin-top: 20px;
-            font-family: monospace;
-            white-space: pre;
-        }
-        
-        .resposta-item {
-            margin: 15px 0;
-            padding: 10px;
-            border-left: 4px solid #ddd;
-        }
-        
-        #tempoRestante {
-            font-weight: bold;
-            color: #2c3e50;
-        }
-        
-        #nomeAluno {
-            padding: 8px;
-            width: 300px;
-            margin: 10px 0;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-        
-        #senhaAcesso {
-            padding: 8px;
-            width: 200px;
-            margin: 10px 0;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-        
-        .senha-container {
-            margin: 20px 0;
-        }
-        
-        #emailForm {
-            margin-top: 20px;
+        .question {
+            margin-bottom: 25px;
             padding: 15px;
-            background-color: #f0f0f0;
-            border-radius: 5px;
+            border-left: 4px solid #4CAF50;
+            background-color: #f9f9f9;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
         }
         
-        #emailForm input {
-            padding: 8px;
-            margin: 5px 0;
+        .options label {
+            display: block;
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        
+        .options label:hover {
+            background-color: #f0f0f0;
+        }
+        
+        .cheat-alert {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
-            box-sizing: border-box;
+            background-color: #ff4444;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            display: none;
+            z-index: 1000;
+        }
+        
+        .anti-copy {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        
+        /* Efeito para dificultar captura de tela */
+        .quiz-container::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(255,255,255,0.05) 2px,
+                rgba(255,255,255,0.05) 4px
+            );
+            pointer-events: none;
+            z-index: -1;
         }
     </style>
 </head>
-<body>
-    <h1>Avaliação de Conhecimentos em Desenvolvimento Web</h1>
-    
-    <div id="inicio">
-        <p>Leia as instruções cuidadosamente:</p>
-        <ul>
-            <li>A prova deve ser respondida sem sair da janela do navegador</li>
-            <li>Não minimize a janela ou mude para outras abas</li>
-            <li>Você terá <span id="tempoRestante">60:00</span> para completar a prova</li>
-            <li>Mudanças de aba serão detectadas e penalizadas</li>
-            <li>Ao terminar a prova chame o professor</li>
+<body class="anti-copy">
+    <!-- Alerta de trapaça -->
+    <div class="cheat-alert" id="cheatAlert">
+        🚫 TRAPAÇA DETECTADA! Não saia da página durante o quiz!
+    </div>
 
-        </ul>
-        <div id="formNome" style="margin-top: 20px;">
-            <label for="nomeAluno">Digite seu nome completo:</label><br>
-            <input type="text" id="nomeAluno" required>
-        </div>
-        <button id="iniciarProva">Iniciar Prova</button>
+    <!-- Tela de login -->
+    <div class="login-container" id="loginContainer">
+        <h1>🔐 Acesso ao Quiz de Cidadania Digital</h1>
+        <p>Digite a senha para iniciar o quiz:</p>
+        <input type="password" id="password" placeholder="Digite a senha">
+        <br>
+        <button onclick="checkPassword()">Iniciar Quiz</button>
+        <p id="errorMsg" style="color: red; display: none;">Senha incorreta! Tente novamente.</p>
     </div>
-    
-    <div id="prova" style="display: none;">
-        <h2>Prova de Conhecimentos - GitHub, HTML, CSS e Ferramentas</h2>
-        <p>Aluno: <span id="nomeAlunoExibicao"></span></p>
+
+    <!-- Quiz -->
+    <div class="quiz-container" id="quizContainer">
+        <h1>📝 Quiz - Cidadania Digital</h1>
+        <p>Responda as questões abaixo sobre cidadania digital:</p>
         
-        <div class="questao">
-            <h3>Questão 1 (Básico)</h3>
-            <p>Gustavo finalizou o código de seu portfólio e agora precisa hospedá-lo para que seu cliente possa acessar online. Ele quer uma plataforma que integre-se facilmente com seu repositório no GitHub e ofereça deploys automáticos. Qual serviço é mais adequado?</p>
-            <div class="alternativas">
-                <label class="alternativa">
-                    <input type="radio" name="q1" value="A"> Netlify
-                </label>
-                <label class="alternativa">
-                    <input type="radio" name="q1" value="B"> Vercel
-                </label>
-                <label class="alternativa">
-                    <input type="radio" name="q1" value="C"> Google Drive
-                </label>
-                <label class="alternativa">
-                    <input type="radio" name="q1" value="D"> Figma
-                </label>
+        <form id="quizForm">
+            <!-- Questão 1 -->
+            <div class="question">
+                <h3>1. O que é cidadania digital?</h3>
+                <div class="options">
+                    <label>
+                        <input type="radio" name="q1" value="a"> 
+                        a) Uso de tecnologias apenas para entretenimento
+                    </label>
+                    <label>
+                        <input type="radio" name="q1" value="b"> 
+                        b) Conjunto de direitos e deveres no ambiente digital
+                    </label>
+                    <label>
+                        <input type="radio" name="q1" value="c"> 
+                        c) Compra e venda de produtos online
+                    </label>
+                </div>
             </div>
-        </div>
-        
-        <div class="questao">
-            <h3>Questão 2 (Básico)</h3>
-            <p>Ana está criando uma página estática e precisa organizar seus arquivos. Qual estrutura de pastas é a mais adequada para armazenar imagens, CSS e o arquivo principal?</p>
-            <div class="alternativas">
-                <label class="alternativa">
-                    <input type="radio" name="q2" value="A"> projeto/index.html, projeto/fotos/, projeto/estilos/
-                </label>
-                <label class="alternativa">
-                    <input type="radio" name="q2" value="B"> projeto/index.html, projeto/imagens/, projeto/css/style.css
-                </label>
-                <label class="alternativa">
-                    <input type="radio" name="q2" value="C"> projeto/pagina.html, projeto/img/, projeto/design/
-                </label>
-                <label class="alternativa">
-                    <input type="radio" name="q2" value="D"> projeto/home.html, projeto/assets/, projeto/scripts/
-                </label>
+
+            <!-- Questão 2 -->
+            <div class="question">
+                <h3>2. Qual destes é um exemplo de netiqueta?</h3>
+                <div class="options">
+                    <label>
+                        <input type="radio" name="q2" value="a"> 
+                        a) Escrever em letras maiúsculas
+                    </label>
+                    <label>
+                        <input type="radio" name="q2" value="b"> 
+                        b) Respeitar a opinião dos outros
+                    </label>
+                    <label>
+                        <input type="radio" name="q2" value="c"> 
+                        c) Compartilhar senhas com amigos
+                    </label>
+                </div>
             </div>
-        </div>
-        
-        <div class="questao">
-            <h3>Questão 3 (Básico)</h3>
-            <p>Carlos quer criar uma seção de rodapé em seu site. Qual tag HTML ele deve usar para garantir melhor acessibilidade e SEO?</p>
-            <div class="alternativas">
-                <label class="alternativa">
-                    <input type="radio" name="q3" value="A"> &lt;div id="footer"&gt;
-                </label>
-                <label class="alternativa">
-                    <input type="radio" name="q3" value="B"> &lt;footer&gt;
-                </label>
-                <label class="alternativa">
-                    <input type="radio" name="q3" value="C"> &lt;section class="rodape"&gt;
-                </label>
-                <label class="alternativa">
-                    <input type="radio" name="q3" value="D"> &lt;bottom&gt;
-                </label>
+
+            <!-- Questão 3 -->
+            <div class="question">
+                <h3>3. O que caracteriza cyberbullying?</h3>
+                <div class="options">
+                    <label>
+                        <input type="radio" name="q3" value="a"> 
+                        a) Fazer compras online
+                    </label>
+                    <label>
+                        <input type="radio" name="q3" value="b"> 
+                        b) Agressão moral através da internet
+                    </label>
+                    <label>
+                        <input type="radio" name="q3" value="c"> 
+                        c) Usar redes sociais
+                    </label>
+                </div>
             </div>
-        </div>
-        
-        <div class="questao">
-            <h3>Questão 4 (Intermediário)</h3>
-            <p>Julia está com dificuldades para debugar um loop em JavaScript. Qual ferramenta de IA pode sugerir correções em tempo real enquanto ela digita o código?</p>
-            <div class="alternativas">
-                <label class="alternativa">
-                    <input type="radio" name="q4" value="A"> ChatGPT
-                </label>
-                <label class="alternativa">
-                    <input type="radio" name="q4" value="B"> GitHub Copilot
-                </label>
-                <label class="alternativa">
-                    <input type="radio" name="q4" value="C"> Canva
-                </label>
-                <label class="alternativa">
-                    <input type="radio" name="q4" value="D"> Figma
-                </label>
+
+            <!-- Questão 4 -->
+            <div class="question">
+                <h3>4. Por que é importante ter senhas fortes?</h3>
+                <div class="options">
+                    <label>
+                        <input type="radio" name="q4" value="a"> 
+                        a) Para dificultar a memorização
+                    </label>
+                    <label>
+                        <input type="radio" name="q4" value="b"> 
+                        b) Proteger contra acesso não autorizado
+                    </label>
+                    <label>
+                        <input type="radio" name="q4" value="c"> 
+                        c) Para impressionar os amigos
+                    </label>
+                </div>
             </div>
-        </div>
-        
-        <div class="questao">
-            <h3>Questão 5 (Intermediário)</h3>
-            <p>Mariana quer estilizar três seções de sua página com cores diferentes: topo (azul), meio (verde) e rodapé (preto). Qual formato de classe CSS ela deve usar?</p>
-            <div class="alternativas">
-                <label class="alternativa">
-                    <input type="radio" name="q5" value="A"> 
-                    .topo { background-color: blue; }<br>
-                    .meio { background-color: green; }<br>
-                    .final { background-color: black; }
-                </label>
-                <label class="alternativa">
-                    <input type="radio" name="q5" value="B"> 
-                    #topo { color: blue; }<br>
-                    #meio { color: green; }<br>
-                    #final { color: black; }
-                </label>
-                <label class="alternativa">
-                    <input type="radio" name="q5" value="C"> 
-                    div { background: blue; }<br>
-                    section { background: green; }<br>
-                    footer { background: black; }
-                </label>
+
+            <!-- Questão 5 -->
+            <div class="question">
+                <h3>5. O que é phishing?</h3>
+                <div class="options">
+                    <label>
+                        <input type="radio" name="q5" value="a"> 
+                        a) Tipo de pescaria esportiva
+                    </label>
+                    <label>
+                        <input type="radio" name="q5" value="b"> 
+                        b) Técnica para enganar e obter dados pessoais
+                    </label>
+                    <label>
+                        <input type="radio" name="q5" value="c"> 
+                        c) Forma de fazer novos amigos online
+                    </label>
+                </div>
             </div>
-        </div>
-        
-        <div class="questao">
-            <h3>Questão 6 (Intermediário)</h3>
-            <p>Lucas escreveu o código abaixo, mas a div não está sendo exibida. Qual é o erro?</p>
-            <pre>
-        &lt;div class="banner"&gt; &lt;/div&gt;
-        .banner {
-            width: 100%;
-            height: 200px;
-        }
-            </pre>
-            <div class="alternativas">
-                <label class="alternativa">
-                    <input type="radio" name="q6" value="A"> Falta de conteúdo dentro da div
-                </label>
-                <label class="alternativa">
-                    <input type="radio" name="q6" value="B"> Falta de background-color ou border para visualização
-                </label>
-                <label class="alternativa">
-                    <input type="radio" name="q6" value="C"> A classe foi escrita errada no CSS
-                </label>
-                <label class="alternativa">
-                    <input type="radio" name="q6" value="D"> Não há erro; a div está correta, mas invisível sem estilos adicionais
-                </label>
+
+            <!-- Questão 6 -->
+            <div class="question">
+                <h3>6. Qual é a idade mínima para usar redes sociais como Facebook e Instagram?</h3>
+                <div class="options">
+                    <label>
+                        <input type="radio" name="q6" value="a"> 
+                        a) 10 anos
+                    </label>
+                    <label>
+                        <input type="radio" name="q6" value="b"> 
+                        b) 13 anos
+                    </label>
+                    <label>
+                        <input type="radio" name="q6" value="c"> 
+                        c) 16 anos
+                    </label>
+                </div>
             </div>
-        </div>
-        
-        <div class="questao">
-            <h3>Questão 7 (Avançado)</h3>
-            <p>Ao tentar abrir seu repositório no GitHub Codespaces, Pedro digitou um atalho no navegador para editar o código rapidamente. Qual é esse atalho?</p>
-            <div class="alternativas">
-                <label class="alternativa">
-                    <input type="radio" name="q7" value="A"> Pressionar Tab no repositório
-                </label>
-                <label class="alternativa">
-                    <input type="radio" name="q7" value="B"> Digitar ! na barra de URL
-                </label>
-                <label class="alternativa">
-                    <input type="radio" name="q7" value="C"> Pressionar . (ponto) no repositório
-                </label>
-                <label class="alternativa">
-                    <input type="radio" name="q7" value="D"> Clicar em "Fork" e depois em "Edit"
-                </label>
+
+            <!-- Questão 7 -->
+            <div class="question">
+                <h3>7. O que significa LGPD?</h3>
+                <div class="options">
+                    <label>
+                        <input type="radio" name="q7" value="a"> 
+                        a) Lei Geral de Proteção de Dados
+                    </label>
+                    <label>
+                        <input type="radio" name="q7" value="b"> 
+                        b) Liga de Games Profissionais Digitais
+                    </label>
+                    <label>
+                        <input type="radio" name="q7" value="c"> 
+                        c) Licença Geral para Publicação Digital
+                    </label>
+                </div>
             </div>
-        </div>
-        
-        <div class="questao">
-            <h3>Questão 8 (Avançado)</h3>
-            <p>Um elemento está muito colado no topo da página, e Carla quer adicionar espaço externo a ele. Qual propriedade CSS ela deve usar?</p>
-            <div class="alternativas">
-                <label class="alternativa">
-                    <input type="radio" name="q8" value="A"> padding-top: 20px;
-                </label>
-                <label class="alternativa">
-                    <input type="radio" name="q8" value="B"> margin-top: 20px;
-                </label>
-                <label class="alternativa">
-                    <input type="radio" name="q8" value="C"> border-top: 20px;
-                </label>
-                <label class="alternativa">
-                    <input type="radio" name="q8" value="D"> position: top 20px;
-                </label>
+
+            <!-- Questão 8 -->
+            <div class="question">
+                <h3>8. Qual destes é um comportamento seguro online?</h3>
+                <div class="options">
+                    <label>
+                        <input type="radio" name="q8" value="a"> 
+                        a) Compartilhar localização em tempo real
+                    </label>
+                    <label>
+                        <input type="radio" name="q8" value="b"> 
+                        b) Usar redes Wi-Fi públicas para transações bancárias
+                    </label>
+                    <label>
+                        <input type="radio" name="q8" value="c"> 
+                        c) Verificar a segurança dos sites antes de informar dados
+                    </label>
+                </div>
             </div>
-        </div>
-        
-        <div class="questao">
-            <h3>Questão 9 (Avançado)</h3>
-            <p>Rafael quer criar um protótipo de interface para validar com seu time antes de codificar. Qual recurso do Canva é mais útil para isso?</p>
-            <div class="alternativas">
-                <label class="alternativa">
-                    <input type="radio" name="q9" value="A"> Templates de apresentação
-                </label>
-                <label class="alternativa">
-                    <input type="radio" name="q9" value="B"> Ferramenta de wireframes
-                </label>
-                <label class="alternativa">
-                    <input type="radio" name="q9" value="C"> Editor de vídeo
-                </label>
-                <label class="alternativa">
-                    <input type="radio" name="q9" value="D"> Criação de logos
-                </label>
+
+            <!-- Questão 9 -->
+            <div class="question">
+                <h3>9. O que é direito ao esquecimento na internet?</h3>
+                <div class="options">
+                    <label>
+                        <input type="radio" name="q9" value="a"> 
+                        a) Esquecer suas próprias senhas
+                    </label>
+                    <label>
+                        <input type="radio" name="q9" value="b"> 
+                        b) Possibilidade de remover informações pessoais desatualizadas
+                    </label>
+                    <label>
+                        <input type="radio" name="q9" value="c"> 
+                        c) Deletar fotos antigas do celular
+                    </label>
+                </div>
             </div>
-        </div>
-        
-        <div class="questao">
-            <h3>Questão 10 (Avançado)</h3>
-            <p>Qual é a diferença entre rgb(255, 0, 0) e #FF0000 no CSS?</p>
-            <div class="alternativas">
-                <label class="alternativa">
-                    <input type="radio" name="q10" value="A"> RGB é para imagens; HEX é para textos
-                </label>
-                <label class="alternativa">
-                    <input type="radio" name="q10" value="B"> RGB usa valores decimais; HEX usa valores hexadecimais, mas ambas representam a mesma cor vermelha
-                </label>
-                <label class="alternativa">
-                    <input type="radio" name="q10" value="C"> HEX é mais moderno que RGB
-                </label>
-                <label class="alternativa">
-                    <input type="radio" name="q10" value="D"> RGB não funciona em navegadores antigos
-                </label>
+
+            <!-- Questão 10 -->
+            <div class="question">
+                <h3>10. Qual a importância da verificação de informações nas redes sociais?</h3>
+                <div class="options">
+                    <label>
+                        <input type="radio" name="q10" value="a"> 
+                        a) Aumentar o número de seguidores
+                    </label>
+                    <label>
+                        <input type="radio" name="q10" value="b"> 
+                        b) Combater fake news e desinformação
+                    </label>
+                    <label>
+                        <input type="radio" name="q10" value="c"> 
+                        c) Tornar o perfil mais popular
+                    </label>
+                </div>
             </div>
-        </div>
-        
-        <button id="finalizar">Finalizar Prova</button>
-    </div>
-    
-    <div id="gabarito">
-        <h2>Seu Resumo de Respostas</h2>
-        <p>Aluno: <span id="nomeAlunoGabarito"></span></p>
-        <div id="resumoRespostas"></div>
-        
-     
-        
-       <button id="voltarInicio">Voltar ao Início</button>
-    </div>
-    
-    <div id="aviso">
-        <h2>ATENÇÃO!</h2>
-        <p>Você mudou de aba ou minimizou a janela!</p>
-        <p>Tentativas restantes: <span id="contadorTentativas">3</span></p>
-        <p>Se continuar, sua prova será automaticamente encerrada.</p>
-        <p>Chame um professor</p>
-        
-        <div class="senha-container">
-            <p>Digite a senha para continuar:</p>
-            <input type="password" id="senhaAcesso" placeholder="Digite a senha">
-            <button id="verificarSenha">Verificar</button>
-        </div>
+
+            <button type="button" onclick="submitQuiz()">Enviar Respostas</button>
+        </form>
     </div>
 
     <script>
-        // Variáveis de controle
-        let provaIniciada = false;
-        let tentativasRestantes = 3;
-        let tempoRestante = 30 * 60; // 30 minutos em segundos
-        let intervaloContador;
-        const SENHA_CORRETA = "12071997";
-        const EMAIL_PROFESSOR = "de.medeiros.gustavo@escola.pr.gov.br";
-        
-        // Elementos DOM
-        const inicioDiv = document.getElementById('inicio');
-        const provaDiv = document.getElementById('prova');
-        const avisoDiv = document.getElementById('aviso');
-        const gabaritoDiv = document.getElementById('gabarito');
-        const contadorTentativasSpan = document.getElementById('contadorTentativas');
-        const tempoRestanteSpan = document.getElementById('tempoRestante');
-        const nomeAlunoInput = document.getElementById('nomeAluno');
-        const nomeAlunoExibicao = document.getElementById('nomeAlunoExibicao');
-        const nomeAlunoGabarito = document.getElementById('nomeAlunoGabarito');
-        const resumoRespostasDiv = document.getElementById('resumoRespostas');
-        const iniciarBtn = document.getElementById('iniciarProva');
-        const finalizarBtn = document.getElementById('finalizar');
-        const voltarInicioBtn = document.getElementById('voltarInicio');
-        const verificarSenhaBtn = document.getElementById('verificarSenha');
-        const senhaAcessoInput = document.getElementById('senhaAcesso');
-        const enviarEmailBtn = document.getElementById('enviarEmail');
-        const emailAlunoInput = document.getElementById('emailAluno');
-        const statusEnvioP = document.getElementById('statusEnvio');
-        
-        // Respostas corretas (não exibidas ao aluno)
-        const respostasCorretas = {
-            1: "B",
-            2: "B",
-            3: "B",
-            4: "B",
-            5: "B",
-            6: "B",
-            7: "B",
-            8: "C",
-            9: "A",
-            10: "C"
-        };
-        
-        // Event Listeners
-        iniciarBtn.addEventListener('click', iniciarProva);
-        finalizarBtn.addEventListener('click', finalizarProva);
-        voltarInicioBtn.addEventListener('click', voltarInicio);
-        verificarSenhaBtn.addEventListener('click', verificarSenha);
-        enviarEmailBtn.addEventListener('click', enviarEmail);
-        
-        // Adicionar evento de tecla para a senha (Enter)
-        senhaAcessoInput.addEventListener('keypress', function(e) {
+        // Verificação de senha
+        function checkPassword() {
+            const password = document.getElementById('password').value;
+            const errorMsg = document.getElementById('errorMsg');
+            
+            if (password === '1207') {
+                document.getElementById('loginContainer').style.display = 'none';
+                document.getElementById('quizContainer').style.display = 'block';
+                startQuizMonitoring();
+            } else {
+                errorMsg.style.display = 'block';
+            }
+        }
+
+        // Permitir Enter para enviar a senha
+        document.getElementById('password').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
-                verificarSenha();
+                checkPassword();
             }
         });
-        
-        // Função para verificar a senha
-        function verificarSenha() {
-            if (senhaAcessoInput.value === SENHA_CORRETA) {
-                avisoDiv.style.display = 'none';
-                senhaAcessoInput.value = '';
+
+        // Monitoramento de segurança
+        function startQuizMonitoring() {
+            let cheatDetected = false;
+            
+            // Detecta quando o usuário muda de aba ou minimiza a janela
+            document.addEventListener('visibilitychange', function() {
+                if (document.hidden && !cheatDetected) {
+                    showCheatAlert();
+                    cheatDetected = true;
+                }
+            });
+            
+            // Detecta quando o usuário tenta sair da página
+            window.addEventListener('beforeunload', function(e) {
+                if (!cheatDetected) {
+                    e.preventDefault();
+                    e.returnValue = '';
+                    showCheatAlert();
+                    cheatDetected = true;
+                }
+            });
+            
+            // Detecta perda de foco da janela
+            window.addEventListener('blur', function() {
+                if (!cheatDetected) {
+                    showCheatAlert();
+                    cheatDetected = true;
+                }
+            });
+
+            // Bloqueia o botão direito do mouse (menu de contexto)
+            document.addEventListener('contextmenu', function(e) {
+                e.preventDefault();
+                showCheatAlert();
+                cheatDetected = true;
+            });
+
+            // Bloqueia atalhos de teclado comuns para print, etc.
+            document.addEventListener('keydown', function(e) {
+                // Ctrl+P (Print), Ctrl+S (Save), F12 (DevTools)
+                if ((e.ctrlKey && (e.key === 'p' || e.key === 's')) || e.key === 'F12') {
+                    e.preventDefault();
+                    showCheatAlert();
+                    cheatDetected = true;
+                }
+            });
+
+            // Detecta tentativas de captura de tela (em alguns navegadores)
+            document.addEventListener('keyup', function(e) {
+                // Print Screen key
+                if (e.key === 'PrintScreen') {
+                    showCheatAlert();
+                    cheatDetected = true;
+                    // Tenta limpar a área de transferência
+                    navigator.clipboard.writeText('Trapaça detectada!');
+                }
+            });
+
+            // Previne arrastar e soltar
+            document.addEventListener('dragstart', function(e) {
+                e.preventDefault();
+                return false;
+            });
+
+            document.addEventListener('drop', function(e) {
+                e.preventDefault();
+                return false;
+            });
+        }
+
+        // Mostrar alerta de trapaça
+        function showCheatAlert() {
+            const alert = document.getElementById('cheatAlert');
+            alert.style.display = 'block';
+            
+            // Faz o alerta piscar
+            let blinkCount = 0;
+            const blinkInterval = setInterval(() => {
+                alert.style.display = alert.style.display === 'none' ? 'block' : 'none';
+                blinkCount++;
+                
+                if (blinkCount >= 10) {
+                    clearInterval(blinkInterval);
+                    alert.style.display = 'block';
+                }
+            }, 500);
+
+            // Adiciona uma mensagem no console também
+            console.log('🚫 TRAPAÇA DETECTADA! O aluno tentou usar métodos não permitidos.');
+        }
+
+        // Submissão do quiz
+        function submitQuiz() {
+            // Verifica se todas as questões foram respondidas
+            const allAnswered = checkAllQuestionsAnswered();
+            
+            if (allAnswered) {
+                alert('Quiz enviado com sucesso! Em breve você receberá o resultado.');
+                // Aqui você pode adicionar a lógica para calcular a pontuação
             } else {
-                alert('Senha incorreta!');
+                alert('Por favor, responda todas as questões antes de enviar!');
             }
         }
-        
-        // Função para enviar e-mail (simulado)
-        function enviarEmail() {
-            if (!emailAlunoInput.value) {
-                alert("Por favor, digite seu e-mail.");
-                return;
-            }
-            
-            statusEnvioP.textContent = "Enviando...";
-            statusEnvioP.style.color = "blue";
-            
-            // Simular envio de e-mail (na prática isso exigiria um backend)
-            const nomeAluno = nomeAlunoInput.value.trim();
-            const emailAluno = emailAlunoInput.value.trim();
-            const respostas = gerarTextoRespostas();
-            
-            // Criar link mailto (funcionará se o cliente de e-mail estiver configurado)
-            const assunto = `Resultado da Prova - ${nomeAluno}`;
-            const corpo = `Segue o gabarito do aluno:\n\n${respostas}\n\nEnviado por: ${emailAluno}`;
-            
-            const mailtoLink = `mailto:${EMAIL_PROFESSOR}?subject=${encodeURIComponent(assunto)}&body=${encodeURIComponent(corpo)}`;
-            
-            // Abrir cliente de e-mail
-            setTimeout(() => {
-                window.location.href = mailtoLink;
-                statusEnvioP.textContent = "Clique no botão de enviar no seu cliente de e-mail que abriu.";
-                statusEnvioP.style.color = "green";
-            }, 1000);
-        }
-        
-        // Função para gerar texto simples das respostas
-        function gerarTextoRespostas() {
-            let texto = `Aluno: ${nomeAlunoInput.value.trim()}\n\n`;
-            
+
+        // Verifica se todas as questões foram respondidas
+        function checkAllQuestionsAnswered() {
             for (let i = 1; i <= 10; i++) {
-                const respostaSelecionada = document.querySelector(`input[name="q${i}"]:checked`);
-                const respostaAluno = respostaSelecionada ? respostaSelecionada.value : 'Não respondida';
-                
-                texto += `Questão ${i} (${respostaAluno})\n`;
-            }
-            
-            return texto;
-        }
-        
-        // Função para iniciar a prova
-        function iniciarProva() {
-            if (!nomeAlunoInput.value.trim()) {
-                alert("Por favor, digite seu nome antes de iniciar a prova.");
-                return;
-            }
-            
-            provaIniciada = true;
-            inicioDiv.style.display = 'none';
-            provaDiv.style.display = 'block';
-            
-            // Exibir nome do aluno
-            nomeAlunoExibicao.textContent = nomeAlunoInput.value.trim();
-            
-            // Iniciar contador de tempo
-            intervaloContador = setInterval(atualizarContador, 1000);
-            
-            // Configurar eventos de monitoramento
-            window.addEventListener('blur', verificarMudancaAba);
-            document.addEventListener('visibilitychange', verificarVisibilidade);
-        }
-        
-        // Função para atualizar o contador de tempo
-        function atualizarContador() {
-            tempoRestante--;
-            
-            if (tempoRestante <= 0) {
-                clearInterval(intervaloContador);
-                alert('Tempo esgotado! A prova será encerrada.');
-                finalizarProva();
-                return;
-            }
-            
-            const minutos = Math.floor(tempoRestante / 60);
-            const segundos = tempoRestante % 60;
-            tempoRestanteSpan.textContent = `${minutos}:${segundos < 10 ? '0' : ''}${segundos}`;
-        }
-        
-        // Função para verificar mudança de aba
-        function verificarMudancaAba() {
-            if (provaIniciada && document.hidden) {
-                avisarMudanca();
-            }
-        }
-        
-        // Função para verificar visibilidade da página
-        function verificarVisibilidade() {
-            if (provaIniciada && document.hidden) {
-                avisarMudanca();
-            }
-        }
-        
-        // Função para avisar sobre mudança de aba
-        function avisarMudanca() {
-            tentativasRestantes--;
-            contadorTentativasSpan.textContent = tentativasRestantes;
-            avisoDiv.style.display = 'block';
-            
-            if (tentativasRestantes <= 0) {
-                alert('Você excedeu o número de tentativas permitidas. Prova encerrada!');
-                finalizarProva();
-            }
-        }
-        
-        // Função para finalizar a prova
-        function finalizarProva() {
-            // Verificar se todas as questões foram respondidas
-            let todasRespondidas = true;
-            for (let i = 1; i <= 10; i++) {
-                if (!document.querySelector(`input[name="q${i}"]:checked`)) {
-                    todasRespondidas = false;
-                    break;
+                const questionName = 'q' + i;
+                const selected = document.querySelector(`input[name="${questionName}"]:checked`);
+                if (!selected) {
+                    return false;
                 }
             }
-            
-            if (!todasRespondidas) {
-                if (!confirm('Você não respondeu todas as questões. Deseja realmente finalizar?')) {
-                    return;
-                }
-            }
-            
-            provaIniciada = false;
-            clearInterval(intervaloContador);
-            
-            // Remover event listeners
-            window.removeEventListener('blur', verificarMudancaAba);
-            document.removeEventListener('visibilitychange', verificarVisibilidade);
-            
-            // Gerar resumo das respostas
-            gerarResumoRespostas();
-            
-            // Mostrar resumo
-            provaDiv.style.display = 'none';
-            gabaritoDiv.style.display = 'block';
+            return true;
         }
-        
-        // Função para gerar o resumo das respostas no formato solicitado
-        function gerarResumoRespostas() {
-            nomeAlunoGabarito.textContent = nomeAlunoInput.value.trim();
-            
-            let textoRespostas = `Aluno: ${nomeAlunoInput.value.trim()}\n\n`;
-            
-            for (let i = 1; i <= 10; i++) {
-                const respostaSelecionada = document.querySelector(`input[name="q${i}"]:checked`);
-                const respostaAluno = respostaSelecionada ? respostaSelecionada.value : 'Não respondida';
-                
-                textoRespostas += `Questão ${i} (${respostaAluno})\n`;
-            }
-            
-            resumoRespostasDiv.textContent = textoRespostas;
-        }
-        
-        // Função para voltar ao início
-        function voltarInicio() {
-            gabaritoDiv.style.display = 'none';
-            inicioDiv.style.display = 'block';
-            tentativasRestantes = 3;
-            contadorTentativasSpan.textContent = tentativasRestantes;
-            tempoRestante = 30 * 60;
-            tempoRestanteSpan.textContent = "30:00";
-            
-            // Limpar respostas
-            for (let i = 1; i <= 10; i++) {
-                const radios = document.querySelectorAll(`input[name="q${i}"]`);
-                radios.forEach(radio => radio.checked = false);
-            }
-            
-            // Limpar e-mail
-            emailAlunoInput.value = '';
-            statusEnvioP.textContent = '';
-        }
+
+        // Bloqueia seleção de texto e cópia
+        document.addEventListener('selectstart', function(e) {
+            e.preventDefault();
+            return false;
+        });
+
+        document.addEventListener('copy', function(e) {
+            e.preventDefault();
+            return false;
+        });
+
+        document.addEventListener('cut', function(e) {
+            e.preventDefault();
+            return false;
+        });
     </script>
 </body>
 </html>
