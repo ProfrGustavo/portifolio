@@ -4,130 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quiz Cidadania Digital</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f5f5f5;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-        }
-        
-        .login-container {
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            text-align: center;
-        }
-        
-        .quiz-container {
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            display: none;
-        }
-        
-        input[type="password"] {
-            padding: 10px;
-            font-size: 16px;
-            border: 2px solid #ddd;
-            border-radius: 5px;
-            margin: 10px 0;
-        }
-        
-        button {
-            background-color: #4CAF50;
-            color: white;
-            padding: 12px 24px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-        
-        button:hover {
-            background-color: #45a049;
-        }
-        
-        .question {
-            margin-bottom: 25px;
-            padding: 15px;
-            border-left: 4px solid #4CAF50;
-            background-color: #f9f9f9;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-        }
-        
-        .options label {
-            display: block;
-            margin: 10px 0;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            cursor: pointer;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-        }
-        
-        .options label:hover {
-            background-color: #f0f0f0;
-        }
-        
-        .cheat-alert {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            background-color: #ff4444;
-            color: white;
-            padding: 20px;
-            text-align: center;
-            font-size: 18px;
-            font-weight: bold;
-            display: none;
-            z-index: 1000;
-        }
-        
-        .anti-copy {
-            -webkit-touch-callout: none;
-            -webkit-user-select: none;
-            -khtml-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-        }
-        
-        /* Efeito para dificultar captura de tela */
-        .quiz-container::before {
-            content: "";
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: repeating-linear-gradient(
-                0deg,
-                transparent,
-                transparent 2px,
-                rgba(255,255,255,0.05) 2px,
-                rgba(255,255,255,0.05) 4px
-            );
-            pointer-events: none;
-            z-index: -1;
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
-<body class="anti-copy">
+<body>
     <!-- Alerta de trapaça -->
     <div class="cheat-alert" id="cheatAlert">
         🚫 TRAPAÇA DETECTADA! Não saia da página durante o quiz!
@@ -140,7 +19,7 @@
         <input type="password" id="password" placeholder="Digite a senha">
         <br>
         <button onclick="checkPassword()">Iniciar Quiz</button>
-        <p id="errorMsg" style="color: red; display: none;">Senha incorreta! Tente novamente.</p>
+        <p class="error" id="errorMsg">Senha incorreta! A senha deve começar com 'A' e terminar com '99'</p>
     </div>
 
     <!-- Quiz -->
@@ -149,193 +28,93 @@
         <p>Responda as questões abaixo sobre cidadania digital:</p>
         
         <form id="quizForm">
-            <!-- Questão 1 -->
             <div class="question">
                 <h3>1. O que é cidadania digital?</h3>
                 <div class="options">
-                    <label>
-                        <input type="radio" name="q1" value="a"> 
-                        a) Uso de tecnologias apenas para entretenimento
-                    </label>
-                    <label>
-                        <input type="radio" name="q1" value="b"> 
-                        b) Conjunto de direitos e deveres no ambiente digital
-                    </label>
-                    <label>
-                        <input type="radio" name="q1" value="c"> 
-                        c) Compra e venda de produtos online
-                    </label>
+                    <label><input type="radio" name="q1" value="a"> a) Uso de tecnologias apenas para entretenimento</label>
+                    <label><input type="radio" name="q1" value="b"> b) Conjunto de direitos e deveres no ambiente digital</label>
+                    <label><input type="radio" name="q1" value="c"> c) Compra e venda de produtos online</label>
                 </div>
             </div>
 
-            <!-- Questão 2 -->
             <div class="question">
                 <h3>2. Qual destes é um exemplo de netiqueta?</h3>
                 <div class="options">
-                    <label>
-                        <input type="radio" name="q2" value="a"> 
-                        a) Escrever em letras maiúsculas
-                    </label>
-                    <label>
-                        <input type="radio" name="q2" value="b"> 
-                        b) Respeitar a opinião dos outros
-                    </label>
-                    <label>
-                        <input type="radio" name="q2" value="c"> 
-                        c) Compartilhar senhas com amigos
-                    </label>
+                    <label><input type="radio" name="q2" value="a"> a) Escrever em letras maiúsculas</label>
+                    <label><input type="radio" name="q2" value="b"> b) Respeitar a opinião dos outros</label>
+                    <label><input type="radio" name="q2" value="c"> c) Compartilhar senhas com amigos</label>
                 </div>
             </div>
 
-            <!-- Questão 3 -->
             <div class="question">
                 <h3>3. O que caracteriza cyberbullying?</h3>
                 <div class="options">
-                    <label>
-                        <input type="radio" name="q3" value="a"> 
-                        a) Fazer compras online
-                    </label>
-                    <label>
-                        <input type="radio" name="q3" value="b"> 
-                        b) Agressão moral através da internet
-                    </label>
-                    <label>
-                        <input type="radio" name="q3" value="c"> 
-                        c) Usar redes sociais
-                    </label>
+                    <label><input type="radio" name="q3" value="a"> a) Fazer compras online</label>
+                    <label><input type="radio" name="q3" value="b"> b) Agressão moral através da internet</label>
+                    <label><input type="radio" name="q3" value="c"> c) Usar redes sociais</label>
                 </div>
             </div>
 
-            <!-- Questão 4 -->
             <div class="question">
                 <h3>4. Por que é importante ter senhas fortes?</h3>
                 <div class="options">
-                    <label>
-                        <input type="radio" name="q4" value="a"> 
-                        a) Para dificultar a memorização
-                    </label>
-                    <label>
-                        <input type="radio" name="q4" value="b"> 
-                        b) Proteger contra acesso não autorizado
-                    </label>
-                    <label>
-                        <input type="radio" name="q4" value="c"> 
-                        c) Para impressionar os amigos
-                    </label>
+                    <label><input type="radio" name="q4" value="a"> a) Para dificultar a memorização</label>
+                    <label><input type="radio" name="q4" value="b"> b) Proteger contra acesso não autorizado</label>
+                    <label><input type="radio" name="q4" value="c"> c) Para impressionar os amigos</label>
                 </div>
             </div>
 
-            <!-- Questão 5 -->
             <div class="question">
                 <h3>5. O que é phishing?</h3>
                 <div class="options">
-                    <label>
-                        <input type="radio" name="q5" value="a"> 
-                        a) Tipo de pescaria esportiva
-                    </label>
-                    <label>
-                        <input type="radio" name="q5" value="b"> 
-                        b) Técnica para enganar e obter dados pessoais
-                    </label>
-                    <label>
-                        <input type="radio" name="q5" value="c"> 
-                        c) Forma de fazer novos amigos online
-                    </label>
+                    <label><input type="radio" name="q5" value="a"> a) Tipo de pescaria esportiva</label>
+                    <label><input type="radio" name="q5" value="b"> b) Técnica para enganar e obter dados pessoais</label>
+                    <label><input type="radio" name="q5" value="c"> c) Forma de fazer novos amigos online</label>
                 </div>
             </div>
 
-            <!-- Questão 6 -->
             <div class="question">
                 <h3>6. Qual é a idade mínima para usar redes sociais como Facebook e Instagram?</h3>
                 <div class="options">
-                    <label>
-                        <input type="radio" name="q6" value="a"> 
-                        a) 10 anos
-                    </label>
-                    <label>
-                        <input type="radio" name="q6" value="b"> 
-                        b) 13 anos
-                    </label>
-                    <label>
-                        <input type="radio" name="q6" value="c"> 
-                        c) 16 anos
-                    </label>
+                    <label><input type="radio" name="q6" value="a"> a) 10 anos</label>
+                    <label><input type="radio" name="q6" value="b"> b) 13 anos</label>
+                    <label><input type="radio" name="q6" value="c"> c) 16 anos</label>
                 </div>
             </div>
 
-            <!-- Questão 7 -->
             <div class="question">
                 <h3>7. O que significa LGPD?</h3>
                 <div class="options">
-                    <label>
-                        <input type="radio" name="q7" value="a"> 
-                        a) Lei Geral de Proteção de Dados
-                    </label>
-                    <label>
-                        <input type="radio" name="q7" value="b"> 
-                        b) Liga de Games Profissionais Digitais
-                    </label>
-                    <label>
-                        <input type="radio" name="q7" value="c"> 
-                        c) Licença Geral para Publicação Digital
-                    </label>
+                    <label><input type="radio" name="q7" value="a"> a) Lei Geral de Proteção de Dados</label>
+                    <label><input type="radio" name="q7" value="b"> b) Liga de Games Profissionais Digitais</label>
+                    <label><input type="radio" name="q7" value="c"> c) Licença Geral para Publicação Digital</label>
                 </div>
             </div>
 
-            <!-- Questão 8 -->
             <div class="question">
                 <h3>8. Qual destes é um comportamento seguro online?</h3>
                 <div class="options">
-                    <label>
-                        <input type="radio" name="q8" value="a"> 
-                        a) Compartilhar localização em tempo real
-                    </label>
-                    <label>
-                        <input type="radio" name="q8" value="b"> 
-                        b) Usar redes Wi-Fi públicas para transações bancárias
-                    </label>
-                    <label>
-                        <input type="radio" name="q8" value="c"> 
-                        c) Verificar a segurança dos sites antes de informar dados
-                    </label>
+                    <label><input type="radio" name="q8" value="a"> a) Compartilhar localização em tempo real</label>
+                    <label><input type="radio" name="q8" value="b"> b) Usar redes Wi-Fi públicas para transações bancárias</label>
+                    <label><input type="radio" name="q8" value="c"> c) Verificar a segurança dos sites antes de informar dados</label>
                 </div>
             </div>
 
-            <!-- Questão 9 -->
             <div class="question">
                 <h3>9. O que é direito ao esquecimento na internet?</h3>
                 <div class="options">
-                    <label>
-                        <input type="radio" name="q9" value="a"> 
-                        a) Esquecer suas próprias senhas
-                    </label>
-                    <label>
-                        <input type="radio" name="q9" value="b"> 
-                        b) Possibilidade de remover informações pessoais desatualizadas
-                    </label>
-                    <label>
-                        <input type="radio" name="q9" value="c"> 
-                        c) Deletar fotos antigas do celular
-                    </label>
+                    <label><input type="radio" name="q9" value="a"> a) Esquecer suas próprias senhas</label>
+                    <label><input type="radio" name="q9" value="b"> b) Possibilidade de remover informações pessoais desatualizadas</label>
+                    <label><input type="radio" name="q9" value="c"> c) Deletar fotos antigas do celular</label>
                 </div>
             </div>
 
-            <!-- Questão 10 -->
             <div class="question">
                 <h3>10. Qual a importância da verificação de informações nas redes sociais?</h3>
                 <div class="options">
-                    <label>
-                        <input type="radio" name="q10" value="a"> 
-                        a) Aumentar o número de seguidores
-                    </label>
-                    <label>
-                        <input type="radio" name="q10" value="b"> 
-                        b) Combater fake news e desinformação
-                    </label>
-                    <label>
-                        <input type="radio" name="q10" value="c"> 
-                        c) Tornar o perfil mais popular
-                    </label>
+                    <label><input type="radio" name="q10" value="a"> a) Aumentar o número de seguidores</label>
+                    <label><input type="radio" name="q10" value="b"> b) Combater fake news e desinformação</label>
+                    <label><input type="radio" name="q10" value="c"> c) Tornar o perfil mais popular</label>
                 </div>
             </div>
 
@@ -343,159 +122,6 @@
         </form>
     </div>
 
-    <script>
-        // Verificação de senha
-        function checkPassword() {
-            const password = document.getElementById('password').value;
-            const errorMsg = document.getElementById('errorMsg');
-            
-            if (password === '1207') {
-                document.getElementById('loginContainer').style.display = 'none';
-                document.getElementById('quizContainer').style.display = 'block';
-                startQuizMonitoring();
-            } else {
-                errorMsg.style.display = 'block';
-            }
-        }
-
-        // Permitir Enter para enviar a senha
-        document.getElementById('password').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                checkPassword();
-            }
-        });
-
-        // Monitoramento de segurança
-        function startQuizMonitoring() {
-            let cheatDetected = false;
-            
-            // Detecta quando o usuário muda de aba ou minimiza a janela
-            document.addEventListener('visibilitychange', function() {
-                if (document.hidden && !cheatDetected) {
-                    showCheatAlert();
-                    cheatDetected = true;
-                }
-            });
-            
-            // Detecta quando o usuário tenta sair da página
-            window.addEventListener('beforeunload', function(e) {
-                if (!cheatDetected) {
-                    e.preventDefault();
-                    e.returnValue = '';
-                    showCheatAlert();
-                    cheatDetected = true;
-                }
-            });
-            
-            // Detecta perda de foco da janela
-            window.addEventListener('blur', function() {
-                if (!cheatDetected) {
-                    showCheatAlert();
-                    cheatDetected = true;
-                }
-            });
-
-            // Bloqueia o botão direito do mouse (menu de contexto)
-            document.addEventListener('contextmenu', function(e) {
-                e.preventDefault();
-                showCheatAlert();
-                cheatDetected = true;
-            });
-
-            // Bloqueia atalhos de teclado comuns para print, etc.
-            document.addEventListener('keydown', function(e) {
-                // Ctrl+P (Print), Ctrl+S (Save), F12 (DevTools)
-                if ((e.ctrlKey && (e.key === 'p' || e.key === 's')) || e.key === 'F12') {
-                    e.preventDefault();
-                    showCheatAlert();
-                    cheatDetected = true;
-                }
-            });
-
-            // Detecta tentativas de captura de tela (em alguns navegadores)
-            document.addEventListener('keyup', function(e) {
-                // Print Screen key
-                if (e.key === 'PrintScreen') {
-                    showCheatAlert();
-                    cheatDetected = true;
-                    // Tenta limpar a área de transferência
-                    navigator.clipboard.writeText('Trapaça detectada!');
-                }
-            });
-
-            // Previne arrastar e soltar
-            document.addEventListener('dragstart', function(e) {
-                e.preventDefault();
-                return false;
-            });
-
-            document.addEventListener('drop', function(e) {
-                e.preventDefault();
-                return false;
-            });
-        }
-
-        // Mostrar alerta de trapaça
-        function showCheatAlert() {
-            const alert = document.getElementById('cheatAlert');
-            alert.style.display = 'block';
-            
-            // Faz o alerta piscar
-            let blinkCount = 0;
-            const blinkInterval = setInterval(() => {
-                alert.style.display = alert.style.display === 'none' ? 'block' : 'none';
-                blinkCount++;
-                
-                if (blinkCount >= 10) {
-                    clearInterval(blinkInterval);
-                    alert.style.display = 'block';
-                }
-            }, 500);
-
-            // Adiciona uma mensagem no console também
-            console.log('🚫 TRAPAÇA DETECTADA! O aluno tentou usar métodos não permitidos.');
-        }
-
-        // Submissão do quiz
-        function submitQuiz() {
-            // Verifica se todas as questões foram respondidas
-            const allAnswered = checkAllQuestionsAnswered();
-            
-            if (allAnswered) {
-                alert('Quiz enviado com sucesso! Em breve você receberá o resultado.');
-                // Aqui você pode adicionar a lógica para calcular a pontuação
-            } else {
-                alert('Por favor, responda todas as questões antes de enviar!');
-            }
-        }
-
-        // Verifica se todas as questões foram respondidas
-        function checkAllQuestionsAnswered() {
-            for (let i = 1; i <= 10; i++) {
-                const questionName = 'q' + i;
-                const selected = document.querySelector(`input[name="${questionName}"]:checked`);
-                if (!selected) {
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        // Bloqueia seleção de texto e cópia
-        document.addEventListener('selectstart', function(e) {
-            e.preventDefault();
-            return false;
-        });
-
-        document.addEventListener('copy', function(e) {
-            e.preventDefault();
-            return false;
-        });
-
-        document.addEventListener('cut', function(e) {
-            e.preventDefault();
-            return false;
-        });
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
