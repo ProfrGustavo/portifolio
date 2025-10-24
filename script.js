@@ -1,3 +1,20 @@
+// Sistema de criptografia para as questões
+const CryptoJS = require('crypto-js'); // Nota: Em produção, inclua via CDN
+
+// Chave de criptografia (em produção, use uma chave mais segura)
+const ENCRYPTION_KEY = 'quiz_programacao_2024';
+
+// Função para criptografar texto
+function encrypt(text) {
+    return CryptoJS.AES.encrypt(text, ENCRYPTION_KEY).toString();
+}
+
+// Função para descriptografar texto
+function decrypt(encryptedText) {
+    const bytes = CryptoJS.AES.decrypt(encryptedText, ENCRYPTION_KEY);
+    return bytes.toString(CryptoJS.enc.Utf8);
+}
+
 // Variáveis globais
 let cheatDetected = false;
 let selectedQuestions = [];
@@ -31,8 +48,8 @@ function checkPassword() {
 
 // Inicializar o quiz
 function initializeQuiz() {
-    // Sortear 10 questões aleatórias
-    selectedQuestions = getRandomQuestions(10);
+    // Sortear 10 questões aleatórias balanceadas
+    selectedQuestions = getRandomBalancedQuestions(10);
     
     // Inicializar array de respostas
     userAnswers = new Array(selectedQuestions.length).fill(null);
@@ -49,10 +66,58 @@ function initializeQuiz() {
     showQuestion(0);
 }
 
-// Sortear questões aleatórias
-function getRandomQuestions(count) {
-    const shuffled = [...questionBank].sort(() => 0.5 - Math.random());
-    return shuffled.slice(0, count);
+// Sortear questões aleatórias balanceadas (A, B, C, D distribuídas)
+function getRandomBalancedQuestions(count) {
+    // Embaralhar todas as questões
+    const shuffledAll = [...questionBank].sort(() => 0.5 - Math.random());
+    
+    // Selecionar questões garantindo distribuição de respostas
+    const selected = [];
+    const answerCount = { A: 0, B: 0, C: 0, D: 0 };
+    const targetPerAnswer = Math.ceil(count / 4);
+    
+    for (const question of shuffledAll) {
+        if (selected.length >= count) break;
+        
+        const answerLetter = getAnswerLetter(question.correct);
+        
+        // Verificar se ainda precisamos desta letra de resposta
+        if (answerCount[answerLetter] < targetPerAnswer) {
+            // Descriptografar a questão
+            const decryptedQuestion = {
+                ...question,
+                question: decrypt(question.question),
+                options: question.options.map(opt => decrypt(opt)),
+                code: question.code ? decrypt(question.code) : null
+            };
+            
+            selected.push(decryptedQuestion);
+            answerCount[answerLetter]++;
+        }
+    }
+    
+    // Se não conseguiu preencher com a distribuição ideal, completa com questões restantes
+    if (selected.length < count) {
+        const remaining = shuffledAll.filter(q => !selected.includes(q));
+        for (let i = selected.length; i < count && remaining.length > 0; i++) {
+            const question = remaining.shift();
+            const decryptedQuestion = {
+                ...question,
+                question: decrypt(question.question),
+                options: question.options.map(opt => decrypt(opt)),
+                code: question.code ? decrypt(question.code) : null
+            };
+            selected.push(decryptedQuestion);
+        }
+    }
+    
+    // Embaralhar novamente para misturar as letras de resposta
+    return selected.sort(() => 0.5 - Math.random());
+}
+
+// Converter índice numérico para letra (0=A, 1=B, 2=C, 3=D)
+function getAnswerLetter(index) {
+    return String.fromCharCode(65 + index); // 65 = 'A' em ASCII
 }
 
 // Mostrar questão atual
@@ -64,28 +129,88 @@ function showQuestion(index) {
     // Atualizar progresso
     document.getElementById('progress').textContent = `Questão ${index + 1}/${selectedQuestions.length}`;
     
-    // Construir HTML da questão
-    let questionHTML = `<div class="question-text">${question.question}</div>`;
-    questionHTML += '<div class="options">';
+    // Construir HTML da questão baseada no tipo
+    let questionHTML = '';
     
-    question.options.forEach((option, optionIndex) => {
-        const isChecked = userAnswers[index] === optionIndex ? 'checked' : '';
-        questionHTML += `
-            <label>
-                <input type="radio" name="answer" value="${optionIndex}" ${isChecked} onchange="saveAnswer(${optionIndex})">
-                <span>${option}</span>
-            </label>
-        `;
-    });
+    if (question.type === 'multiple') {
+        questionHTML = buildMultipleChoiceHTML(question, index);
+    } else if (question.type === 'code') {
+        questionHTML = buildCodeCompletionHTML(question, index);
+    }
     
-    questionHTML += '</div>';
     questionElement.innerHTML = questionHTML;
     
     // Atualizar botões de navegação
     updateNavigationButtons();
 }
 
-// Salvar resposta
+// Construir HTML para questões de múltipla escolha
+function buildMultipleChoiceHTML(question, index) {
+    let html = `<div class="question-text">${question.question}</div>`;
+    html += '<div class="options">';
+    
+    question.options.forEach((option, optionIndex) => {
+        const isChecked = userAnswers[index] === optionIndex ? 'checked' : '';
+        const answerLetter = String.fromCharCode(65 + optionIndex); // A, B, C, D
+        
+        html += `
+            <label>
+                <input type="radio" name="answer" value="${optionIndex}" ${isChecked} onchange="saveAnswer(${optionIndex})">
+                <span><strong>${answerLetter})</strong> ${option}</span>
+            </label>
+        `;
+    });
+    
+    html += '</div>';
+    return html;
+}
+
+// Construir HTML para questões de completar código
+function buildCodeCompletionHTML(question, index) {
+    let html = `<div class="question-text">${question.question}</div>`;
+    
+    // Processar o código para destacar a parte que deve ser completada
+    const codeWithInput = question.code.replace('_____', 
+        `<input type="text" 
+                class="code-input" 
+                id="codeInput-${index}" 
+                value="${userAnswers[index] || ''}" 
+                oninput="validateCodeAnswer(this, ${index})"
+                placeholder="completar...">`
+    );
+    
+    html += `<div class="code-container">${codeWithInput}</div>`;
+    
+    // Se já houver uma resposta e estiver correta, aplicar estilo
+    if (userAnswers[index] && userAnswers[index] === question.correct) {
+        const inputElement = document.getElementById(`codeInput-${index}`);
+        if (inputElement) {
+            inputElement.classList.add('correct');
+        }
+    }
+    
+    return html;
+}
+
+// Validar resposta de código em tempo real
+function validateCodeAnswer(inputElement, questionIndex) {
+    const userAnswer = inputElement.value.trim();
+    const question = selectedQuestions[questionIndex];
+    
+    // Salvar resposta do usuário
+    userAnswers[questionIndex] = userAnswer;
+    
+    // Verificar se está correta e aplicar estilo
+    if (userAnswer.toLowerCase() === question.correct.toLowerCase()) {
+        inputElement.classList.add('correct');
+    } else {
+        inputElement.classList.remove('correct');
+    }
+    
+    updateNavigationButtons();
+}
+
+// Salvar resposta (para múltipla escolha)
 function saveAnswer(optionIndex) {
     userAnswers[currentQuestionIndex] = optionIndex;
     updateNavigationButtons();
@@ -101,7 +226,8 @@ function updateNavigationButtons() {
     prevBtn.disabled = currentQuestionIndex === 0;
     
     // Botão próximo/submit
-    const hasAnswer = userAnswers[currentQuestionIndex] !== null;
+    const hasAnswer = userAnswers[currentQuestionIndex] !== null && 
+                     userAnswers[currentQuestionIndex] !== '';
     
     if (currentQuestionIndex === selectedQuestions.length - 1) {
         nextBtn.style.display = 'none';
@@ -150,7 +276,7 @@ function updateTimerDisplay() {
     
     // Mudar cor quando o tempo estiver acabando
     if (timeLeft < 300) { // 5 minutos
-        document.getElementById('timer').style.color = '#dc3545';
+        document.getElementById('timer').style.color = '#e74c3c';
         document.getElementById('timer').style.animation = 'pulse 1s infinite';
     }
 }
@@ -180,8 +306,15 @@ function submitQuiz() {
 function calculateScore() {
     let score = 0;
     selectedQuestions.forEach((question, index) => {
-        if (userAnswers[index] === question.correct) {
-            score++;
+        if (question.type === 'multiple') {
+            if (userAnswers[index] === question.correct) {
+                score++;
+            }
+        } else if (question.type === 'code') {
+            if (userAnswers[index] && 
+                userAnswers[index].toLowerCase() === question.correct.toLowerCase()) {
+                score++;
+            }
         }
     });
     return score;
@@ -194,14 +327,27 @@ function showAnswersReview() {
     
     selectedQuestions.forEach((question, index) => {
         const userAnswer = userAnswers[index];
-        const isCorrect = userAnswer === question.correct;
+        let isCorrect = false;
+        let userAnswerText = '';
+        let correctAnswer = '';
+        
+        if (question.type === 'multiple') {
+            isCorrect = userAnswer === question.correct;
+            userAnswerText = question.options[userAnswer];
+            correctAnswer = question.options[question.correct];
+        } else if (question.type === 'code') {
+            isCorrect = userAnswer && userAnswer.toLowerCase() === question.correct.toLowerCase();
+            userAnswerText = userAnswer || '(não respondido)';
+            correctAnswer = question.correct;
+        }
+        
         const answerClass = isCorrect ? 'answer-correct' : 'answer-incorrect';
         
         reviewHTML += `
             <div class="answer-item ${answerClass}">
                 <div class="question-text">${question.question}</div>
-                <div class="user-answer">Sua resposta: ${question.options[userAnswer]}</div>
-                ${!isCorrect ? `<div class="correct-answer">Resposta correta: ${question.options[question.correct]}</div>` : ''}
+                <div class="user-answer">Sua resposta: ${userAnswerText}</div>
+                ${!isCorrect ? `<div class="correct-answer">Resposta correta: ${correctAnswer}</div>` : ''}
             </div>
         `;
     });
@@ -216,11 +362,13 @@ function restartQuiz() {
     currentQuestionIndex = 0;
     userAnswers = [];
     timeLeft = 30 * 60;
+    cheatDetected = false;
     
     // Mostrar tela de login
     document.getElementById('resultContainer').style.display = 'none';
     document.getElementById('loginContainer').style.display = 'block';
     document.getElementById('password').value = '';
+    document.getElementById('errorMsg').style.display = 'none';
 }
 
 // Permitir Enter para enviar a senha
@@ -243,7 +391,9 @@ function startQuizMonitoring() {
     // Detecta quando o usuário tenta sair da página
     window.addEventListener('beforeunload', function(e) {
         if (!cheatDetected) {
-            showCheatAlert();
+            const message = 'Trapaça detectada! O quiz será finalizado.';
+            e.returnValue = message;
+            return message;
         }
     });
     
@@ -255,16 +405,17 @@ function startQuizMonitoring() {
         }
     });
 
-    // Bloqueia o botão direito do mouse com mensagem específica
+    // Bloqueia o botão direito do mouse
     document.addEventListener('contextmenu', function(e) {
         e.preventDefault();
         showRightClickAlert();
     });
 
-    // Bloqueia alguns atalhos de teclado
+    // Bloqueia atalhos de teclado
     document.addEventListener('keydown', function(e) {
-        // Ctrl+P, Ctrl+S, F12
-        if ((e.ctrlKey && (e.key === 'p' || e.key === 's')) || e.key === 'F12') {
+        if ((e.ctrlKey && (e.key === 'p' || e.key === 's')) || 
+            e.key === 'F12' ||
+            (e.ctrlKey && e.shiftKey && e.key === 'I')) {
             e.preventDefault();
             if (!cheatDetected) {
                 showCheatAlert();
@@ -274,34 +425,27 @@ function startQuizMonitoring() {
     });
 }
 
-// Mostrar alerta de trapaça (para sair da página)
+// Mostrar alerta de trapaça
 function showCheatAlert() {
     const alert = document.getElementById('cheatAlert');
     alert.style.display = 'block';
     
-    let blinkCount = 0;
-    const blinkInterval = setInterval(() => {
-        alert.style.display = alert.style.display === 'none' ? 'block' : 'none';
-        blinkCount++;
-        
-        if (blinkCount >= 6) {
-            clearInterval(blinkInterval);
-            alert.style.display = 'block';
-        }
-    }, 300);
+    setTimeout(() => {
+        submitQuiz();
+    }, 2000);
 }
 
-// Mostrar alerta específico para botão direito
+// Mostrar alerta de botão direito
 function showRightClickAlert() {
     const alert = document.getElementById('rightClickAlert');
     alert.style.display = 'block';
     
     setTimeout(() => {
         alert.style.display = 'none';
-    }, 5000);
+    }, 3000);
 }
 
-// Bloqueio de seleção de texto
+// Bloqueio de seleção e cópia
 document.addEventListener('selectstart', function(e) {
     e.preventDefault();
 });
@@ -320,3 +464,9 @@ style.textContent = `
     }
 `;
 document.head.appendChild(style);
+
+// Inicialização quando a página carrega
+document.addEventListener('DOMContentLoaded', function() {
+    // Focar no campo de senha
+    document.getElementById('password').focus();
+});
