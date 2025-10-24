@@ -444,3 +444,22 @@ document.addEventListener('DOMContentLoaded', function() {
     // Focar no campo de senha
     document.getElementById('password').focus();
 });
+
+
+// Adicionar esta função ao script.js se não existir
+function toggleStudyColumn() {
+    const studyColumn = document.getElementById('studyColumn');
+    const quizColumn = document.getElementById('quizColumn');
+    const toggleBtns = document.querySelectorAll('.toggle-btn');
+    
+    studyColumn.classList.toggle('collapsed');
+    quizColumn.classList.toggle('expanded');
+    
+    toggleBtns.forEach(btn => {
+        if (studyColumn.classList.contains('collapsed')) {
+            btn.textContent = '📚 Material';
+        } else {
+            btn.textContent = '◀️ Ocultar';
+        }
+    });
+}
