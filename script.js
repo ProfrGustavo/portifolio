@@ -1,20 +1,3 @@
-// Sistema de criptografia para as questões
-const CryptoJS = require('crypto-js'); // Nota: Em produção, inclua via CDN
-
-// Chave de criptografia (em produção, use uma chave mais segura)
-const ENCRYPTION_KEY = 'quiz_programacao_2024';
-
-// Função para criptografar texto
-function encrypt(text) {
-    return CryptoJS.AES.encrypt(text, ENCRYPTION_KEY).toString();
-}
-
-// Função para descriptografar texto
-function decrypt(encryptedText) {
-    const bytes = CryptoJS.AES.decrypt(encryptedText, ENCRYPTION_KEY);
-    return bytes.toString(CryptoJS.enc.Utf8);
-}
-
 // Variáveis globais
 let cheatDetected = false;
 let selectedQuestions = [];
@@ -83,15 +66,7 @@ function getRandomBalancedQuestions(count) {
         
         // Verificar se ainda precisamos desta letra de resposta
         if (answerCount[answerLetter] < targetPerAnswer) {
-            // Descriptografar a questão
-            const decryptedQuestion = {
-                ...question,
-                question: decrypt(question.question),
-                options: question.options.map(opt => decrypt(opt)),
-                code: question.code ? decrypt(question.code) : null
-            };
-            
-            selected.push(decryptedQuestion);
+            selected.push(question);
             answerCount[answerLetter]++;
         }
     }
@@ -100,14 +75,7 @@ function getRandomBalancedQuestions(count) {
     if (selected.length < count) {
         const remaining = shuffledAll.filter(q => !selected.includes(q));
         for (let i = selected.length; i < count && remaining.length > 0; i++) {
-            const question = remaining.shift();
-            const decryptedQuestion = {
-                ...question,
-                question: decrypt(question.question),
-                options: question.options.map(opt => decrypt(opt)),
-                code: question.code ? decrypt(question.code) : null
-            };
-            selected.push(decryptedQuestion);
+            selected.push(remaining.shift());
         }
     }
     
@@ -203,8 +171,14 @@ function validateCodeAnswer(inputElement, questionIndex) {
     // Verificar se está correta e aplicar estilo
     if (userAnswer.toLowerCase() === question.correct.toLowerCase()) {
         inputElement.classList.add('correct');
+        
+        // Atualizar também o timer se for a questão do timer verde
+        if (question.correct === "#27ae60" && userAnswer.toLowerCase() === "#27ae60") {
+            document.getElementById('timer').classList.add('correct');
+        }
     } else {
         inputElement.classList.remove('correct');
+        document.getElementById('timer').classList.remove('correct');
     }
     
     updateNavigationButtons();
