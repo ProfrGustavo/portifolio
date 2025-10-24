@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz de Programação</title>
+    <title>Quiz de Programação - Material de Estudo</title>
     <link rel="stylesheet" href="styles.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
 </head>
 <body>
     <!-- Alerta de trapaça -->
@@ -18,54 +17,87 @@
         ⚠️ TENTATIVA DE TRAPAÇA! Não use o botão direito do mouse.
     </div>
 
-    <!-- Tela de login -->
-    <div class="login-container" id="loginContainer">
-        <h1>🔐 Acesso ao Quiz de Programação</h1>
-        <p>Digite a senha para iniciar o quiz:</p>
-        <input type="password" id="password" placeholder="Digite a senha">
-        <br>
-        <button onclick="checkPassword()">Iniciar Quiz</button>
-        <p class="error" id="errorMsg">Senha incorreta! Tente novamente.</p>
-    </div>
-
-    <!-- Tela de carregamento -->
-    <div class="quiz-container" id="loadingContainer" style="display: none;">
-        <h1>📝 Preparando seu Quiz...</h1>
-        <p>Sorteando suas questões personalizadas...</p>
-        <div class="loading-spinner"></div>
-    </div>
-
-    <!-- Quiz -->
-    <div class="quiz-container" id="quizContainer" style="display: none;">
-        <div class="quiz-header">
-            <div class="timer" id="timer">30:00</div>
-            <div class="progress" id="progress">Questão 1/10</div>
-        </div>
-
-        <h1>📝 Quiz - Programação</h1>
-        
-        <div class="question-container">
-            <div class="question" id="currentQuestion">
-                <!-- Questão será inserida aqui pelo JavaScript -->
+    <!-- Container principal dividido -->
+    <div class="main-container">
+        <!-- Coluna do Material de Estudo -->
+        <div class="study-column" id="studyColumn">
+            <div class="study-header">
+                <h1>📚 Material de Estudo</h1>
+                <p>50 Questões de Programação - Leia atentamente</p>
+                <div class="study-controls">
+                    <button onclick="toggleStudyColumn()" class="toggle-btn">◀️ Ocultar Material</button>
+                    <input type="text" id="studySearch" placeholder="🔍 Buscar nas questões..." onkeyup="filterQuestions()">
+                </div>
             </div>
-            
-            <div class="navigation">
-                <button type="button" onclick="previousQuestion()" id="prevBtn" disabled>Anterior</button>
-                <button type="button" onclick="nextQuestion()" id="nextBtn">Próxima</button>
-                <button type="button" onclick="submitQuiz()" id="submitBtn" style="display: none;">Finalizar Quiz</button>
+            <div class="study-content" id="studyContent">
+                <!-- As questões serão carregadas aqui pelo JavaScript -->
             </div>
         </div>
-    </div>
 
-    <!-- Resultado -->
-    <div class="result-container" id="resultContainer" style="display: none;">
-        <h1>🎯 Resultado do Quiz</h1>
-        <div class="score" id="score">0/10</div>
-        <div class="time-info" id="timeInfo"></div>
-        <div class="answers-review" id="answersReview">
-            <!-- Revisão das respostas -->
+        <!-- No study-header, após o input de busca: -->
+<div class="study-controls">
+    <button onclick="toggleStudyColumn()" class="toggle-btn">◀️ Ocultar Material</button>
+    <input type="text" id="studySearch" placeholder="🔍 Buscar nas questões...">
+    <button onclick="studyMaterial.exportStudyMaterial()" class="export-btn">📥 Exportar</button>
+</div>
+
+        <!-- Coluna do Quiz -->
+        <div class="quiz-column" id="quizColumn">
+            <!-- Tela de login -->
+            <div class="login-container" id="loginContainer">
+                <h1>🔐 Acesso ao Quiz de Programação</h1>
+                <p>Digite a senha para iniciar o quiz:</p>
+                <input type="password" id="password" placeholder="Digite a senha">
+                <br>
+                <button onclick="checkPassword()">Iniciar Quiz</button>
+                <p class="error" id="errorMsg">Senha incorreta! Tente novamente.</p>
+                
+                <div class="study-tip">
+                    <strong>💡 Dica:</strong> Use o material de estudo à esquerda para se preparar!
+                </div>
+            </div>
+
+            <!-- Tela de carregamento -->
+            <div class="quiz-container" id="loadingContainer" style="display: none;">
+                <h1>📝 Preparando seu Quiz...</h1>
+                <p>Sorteando suas questões personalizadas...</p>
+                <div class="loading-spinner"></div>
+            </div>
+
+            <!-- Quiz -->
+            <div class="quiz-container" id="quizContainer" style="display: none;">
+                <div class="quiz-header">
+                    <div class="timer" id="timer">30:00</div>
+                    <div class="progress" id="progress">Questão 1/10</div>
+                    <button onclick="toggleStudyColumn()" class="toggle-btn study-toggle">📚 Mostrar Material</button>
+                </div>
+
+                <h1>📝 Quiz - Programação</h1>
+                
+                <div class="question-container">
+                    <div class="question" id="currentQuestion">
+                        <!-- Questão será inserida aqui pelo JavaScript -->
+                    </div>
+                    
+                    <div class="navigation">
+                        <button type="button" onclick="previousQuestion()" id="prevBtn" disabled>Anterior</button>
+                        <button type="button" onclick="nextQuestion()" id="nextBtn">Próxima</button>
+                        <button type="button" onclick="submitQuiz()" id="submitBtn" style="display: none;">Finalizar Quiz</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Resultado -->
+            <div class="result-container" id="resultContainer" style="display: none;">
+                <h1>🎯 Resultado do Quiz</h1>
+                <div class="score" id="score">0/10</div>
+                <div class="time-info" id="timeInfo"></div>
+                <div class="answers-review" id="answersReview">
+                    <!-- Revisão das respostas -->
+                </div>
+                <button onclick="restartQuiz()">Fazer Novo Quiz</button>
+            </div>
         </div>
-        <button onclick="restartQuiz()">Fazer Novo Quiz</button>
     </div>
 
     <script src="questions.js"></script>

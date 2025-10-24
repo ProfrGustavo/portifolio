@@ -393,3 +393,83 @@ button:disabled {
 .code-property {
     color: #005cc5;
 }
+
+
+/* study.js - Estilos Adicionais */
+.study-options {
+    margin: 10px 0;
+}
+
+.option {
+    padding: 8px 12px;
+    margin: 5px 0;
+    background: #f8f9fa;
+    border-radius: 4px;
+    border-left: 3px solid #bdc3c7;
+}
+
+.correct-option {
+    padding: 8px 12px;
+    margin: 5px 0;
+    background: #d5f4e6;
+    border-radius: 4px;
+    border-left: 3px solid #27ae60;
+    font-weight: 600;
+}
+
+.code-blank {
+    background: #ffeb3b;
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-weight: bold;
+    color: #333;
+}
+
+.study-tags {
+    margin-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.tag {
+    background: #3498db;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.tag.css { background: #3498db; }
+.tag.html { background: #e74c3c; }
+.tag.javascript { background: #f39c12; }
+.tag.react { background: #61dafb; color: #282c34; }
+.tag.git { background: #f05033; }
+.tag.arrays { background: #9b59b6; }
+.tag.funções { background: #1abc9c; }
+.tag.dom { background: #34495e; }
+.tag['completar-código'] { background: #e67e22; }
+.tag['múltipla-escolha'] { background: #95a5a6; }
+
+mark {
+    background: #ffeb3b;
+    padding: 1px 3px;
+    border-radius: 2px;
+}
+
+/* Botão de exportar */
+.export-btn {
+    background: #27ae60;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 12px;
+    margin-left: 10px;
+}
+
+.export-btn:hover {
+    background: #219653;
+}
