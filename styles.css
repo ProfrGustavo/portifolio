@@ -661,3 +661,128 @@ button:disabled {
         font-size: 14px;
     }
 }
+
+
+/* Estilos Simplificados para o Material de Estudo */
+.study-column {
+    flex: 0 0 50%;
+    background: var(--study-bg);
+    border-right: 3px solid var(--border-color);
+    overflow-y: auto;
+    transition: all 0.3s ease;
+}
+
+.study-column.collapsed {
+    flex: 0 0 0;
+    overflow: hidden;
+}
+
+.study-header {
+    background: var(--primary-color);
+    color: white;
+    padding: 20px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.study-header h1 {
+    margin-bottom: 10px;
+    font-size: 24px;
+}
+
+.study-content {
+    padding: 20px;
+}
+
+.study-item {
+    background: white;
+    margin-bottom: 20px;
+    padding: 25px;
+    border-radius: 10px;
+    border-left: 6px solid var(--secondary-color);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.study-question {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
+.study-code {
+    background: var(--code-bg);
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    padding: 20px;
+    margin: 15px 0;
+    font-family: 'Courier New', monospace;
+    font-size: 16px;
+    line-height: 1.5;
+    white-space: pre-wrap;
+}
+
+.study-options {
+    margin: 15px 0;
+}
+
+.option {
+    padding: 12px 15px;
+    margin: 8px 0;
+    background: #f8f9fa;
+    border-radius: 6px;
+    border-left: 4px solid #bdc3c7;
+}
+
+.correct-option {
+    padding: 12px 15px;
+    margin: 8px 0;
+    background: #d5f4e6;
+    border-radius: 6px;
+    border-left: 4px solid var(--success-color);
+    font-weight: 600;
+}
+
+.study-answer {
+    background: var(--success-color);
+    color: white;
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 15px;
+    font-weight: 600;
+}
+
+.toggle-btn {
+    background: var(--warning-color);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.toggle-btn:hover {
+    background: #e67e22;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .study-column {
+        flex: 0 0 40vh;
+        border-right: none;
+        border-bottom: 3px solid var(--border-color);
+    }
+    
+    .study-column.collapsed {
+        flex: 0 0 0;
+    }
+    
+    .study-item {
+        padding: 20px;
+    }
+}

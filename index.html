@@ -20,19 +20,17 @@
     <!-- Container principal dividido -->
     <div class="main-container">
         <!-- Coluna do Material de Estudo -->
-        <div class="study-column" id="studyColumn">
-            <div class="study-header">
-                <h1>📚 Material de Estudo</h1>
-                <p>50 Questões de Programação - Leia atentamente</p>
-                <div class="study-controls">
-                    <button onclick="toggleStudyColumn()" class="toggle-btn">◀️ Ocultar Material</button>
-                    <input type="text" id="studySearch" placeholder="🔍 Buscar nas questões..." onkeyup="filterQuestions()">
-                </div>
-            </div>
-            <div class="study-content" id="studyContent">
-                <!-- As questões serão carregadas aqui pelo JavaScript -->
-            </div>
-        </div>
+        <!-- Coluna do Material de Estudo -->
+<div class="study-column" id="studyColumn">
+    <div class="study-header">
+        <h1>📚 Material de Estudo</h1>
+        <p>Leia as questões antes de fazer o quiz</p>
+        <button onclick="studyMaterial.toggleStudyColumn()" class="toggle-btn">◀️ Ocultar Material</button>
+    </div>
+    <div class="study-content" id="studyContent">
+        <!-- As questões serão carregadas aqui pelo JavaScript -->
+    </div>
+</div>
 
         <!-- No study-header, após o input de busca: -->
 <div class="study-controls">
