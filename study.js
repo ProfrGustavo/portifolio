@@ -1487,7 +1487,6 @@ function loadStudyMaterial() {
     let studyHTML = `
         <div class="topic-menu">
             <h3>📚 Material de Estudo Completo</h3>
-            <p><strong>Organizado por categoria e nível de dificuldade</strong></p>
             
             <div class="topic-category">
                 <h4>🌐 HTML Fundamentos</h4>
