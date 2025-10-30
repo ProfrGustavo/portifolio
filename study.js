@@ -1636,10 +1636,10 @@ function toggleStudyColumn() {
 }
 
 // Carregar o material quando a página estiver pronta
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('DOM carregado, inicializando material de estudo...');
-    loadStudyMaterial();
-});
+//document.addEventListener('DOMContentLoaded', function() {
+  //  console.log('DOM carregado, inicializando material de estudo...');
+  //  loadStudyMaterial();
+//});
 
 // Adicionar também ao objeto global window para acesso via HTML
 window.loadStudyMaterial = loadStudyMaterial;
