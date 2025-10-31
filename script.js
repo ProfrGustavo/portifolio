@@ -4,9 +4,9 @@ let selectedQuestions = [];
 let currentQuestionIndex = 0;
 let userAnswers = [];
 let quizStarted = false;
-let timeLeft = 45 * 60; // 45 minutos em segundos - CORRIGIDO
+let timeLeft = 30 * 60; // 30 minutos em segundos
 let timerInterval;
-let finalScore = 0;
+let finalScore = 0; // Nova variável para armazenar a pontuação final
 
 // Verificação de senha com regex
 function checkPassword() {
@@ -32,8 +32,8 @@ function checkPassword() {
 
 // Inicializar o quiz
 function initializeQuiz() {
-    // Sortear 15 questões aleatórias - CORRIGIDO: usando getRandomQuestions
-    selectedQuestions = getRandomQuestions(15);
+    // Sortear 10 questões aleatórias balanceadas
+    selectedQuestions = getRandomBalancedQuestions(10);
     
     // Inicializar array de respostas
     userAnswers = new Array(selectedQuestions.length).fill(null);
@@ -50,10 +50,43 @@ function initializeQuiz() {
     showQuestion(0);
 }
 
-// Sortear questões aleatórias - FUNÇÃO CORRIGIDA
-function getRandomQuestions(count) {
-    const shuffled = [...questionBank].sort(() => 0.5 - Math.random());
-    return shuffled.slice(0, count);
+// Sortear questões aleatórias balanceadas (A, B, C, D distribuídas)
+function getRandomBalancedQuestions(count) {
+    // Embaralhar todas as questões
+    const shuffledAll = [...questionBank].sort(() => 0.5 - Math.random());
+    
+    // Selecionar questões garantindo distribuição de respostas
+    const selected = [];
+    const answerCount = { A: 0, B: 0, C: 0, D: 0 };
+    const targetPerAnswer = Math.ceil(count / 4);
+    
+    for (const question of shuffledAll) {
+        if (selected.length >= count) break;
+        
+        const answerLetter = getAnswerLetter(question.correct);
+        
+        // Verificar se ainda precisamos desta letra de resposta
+        if (answerCount[answerLetter] < targetPerAnswer) {
+            selected.push(question);
+            answerCount[answerLetter]++;
+        }
+    }
+    
+    // Se não conseguiu preencher com a distribuição ideal, completa com questões restantes
+    if (selected.length < count) {
+        const remaining = shuffledAll.filter(q => !selected.includes(q));
+        for (let i = selected.length; i < count && remaining.length > 0; i++) {
+            selected.push(remaining.shift());
+        }
+    }
+    
+    // Embaralhar novamente para misturar as letras de resposta
+    return selected.sort(() => 0.5 - Math.random());
+}
+
+// Converter índice numérico para letra (0=A, 1=B, 2=C, 3=D)
+function getAnswerLetter(index) {
+    return String.fromCharCode(65 + index); // 65 = 'A' em ASCII
 }
 
 // Mostrar questão atual
@@ -111,22 +144,43 @@ function buildCodeCompletionHTML(question, index) {
                 class="code-input" 
                 id="codeInput-${index}" 
                 value="${userAnswers[index] || ''}" 
-                oninput="saveCodeAnswer(${index})"
+                oninput="validateCodeAnswer(this, ${index})"
                 placeholder="completar...">`
     );
     
     html += `<div class="code-container">${codeWithInput}</div>`;
     
+    // Se já houver uma resposta e estiver correta, aplicar estilo
+    if (userAnswers[index] && userAnswers[index] === question.correct) {
+        const inputElement = document.getElementById(`codeInput-${index}`);
+        if (inputElement) {
+            inputElement.classList.add('correct');
+        }
+    }
+    
     return html;
 }
 
-// Salvar resposta de código
-function saveCodeAnswer(questionIndex) {
-    const inputElement = document.getElementById(`codeInput-${questionIndex}`);
+// Validar resposta de código em tempo real
+function validateCodeAnswer(inputElement, questionIndex) {
     const userAnswer = inputElement.value.trim();
+    const question = selectedQuestions[questionIndex];
     
     // Salvar resposta do usuário
     userAnswers[questionIndex] = userAnswer;
+    
+    // Verificar se está correta e aplicar estilo
+    if (userAnswer.toLowerCase() === question.correct.toLowerCase()) {
+        inputElement.classList.add('correct');
+        
+        // Atualizar também o timer se for a questão do timer verde
+        if (question.correct === "#27ae60" && userAnswer.toLowerCase() === "#27ae60") {
+            document.getElementById('timer').classList.add('correct');
+        }
+    } else {
+        inputElement.classList.remove('correct');
+        document.getElementById('timer').classList.remove('correct');
+    }
     
     updateNavigationButtons();
 }
@@ -175,7 +229,7 @@ function previousQuestion() {
     }
 }
 
-// Timer - CORRIGIDO para 45 minutos
+// Timer
 function startTimer() {
     updateTimerDisplay();
     timerInterval = setInterval(() => {
@@ -202,13 +256,13 @@ function updateTimerDisplay() {
     }
 }
 
-// Submissão do quiz - CORRIGIDO cálculo do tempo
+// Submissão do quiz
 function submitQuiz() {
     clearInterval(timerInterval);
     
     // Calcular pontuação
     finalScore = calculateScore();
-    const timeUsed = 45 * 60 - timeLeft; // 45 minutos
+    const timeUsed = 30 * 60 - timeLeft;
     const minutesUsed = Math.floor(timeUsed / 60);
     const secondsUsed = timeUsed % 60;
     
@@ -254,7 +308,7 @@ function showAnswersReview() {
         
         if (question.type === 'multiple') {
             isCorrect = userAnswer === question.correct;
-            userAnswerText = userAnswer !== null ? question.options[userAnswer] : '(não respondido)';
+            userAnswerText = question.options[userAnswer] || '(não respondido)';
             correctAnswer = question.options[question.correct];
         } else if (question.type === 'code') {
             isCorrect = userAnswer && userAnswer.toLowerCase() === question.correct.toLowerCase();
@@ -272,6 +326,8 @@ function showAnswersReview() {
             </div>
         `;
     });
+    
+    reviewElement.innerHTML = reviewHTML;
     
     // Adicionar botão de enviar resultado
     reviewHTML += `
@@ -292,7 +348,7 @@ function sendResultToTeacher() {
     const teacherEmail = "de.medeiros.gustavo@escola.pr.gov.br";
     
     // Criar resumo das respostas
-    let answersSummary = "Resumo das respostas:\\n\\n";
+    let answersSummary = "Resumo das respostas:\n\n";
     selectedQuestions.forEach((question, index) => {
         const userAnswer = userAnswers[index];
         let userAnswerText = '';
@@ -303,12 +359,12 @@ function sendResultToTeacher() {
             userAnswerText = userAnswer || '(não respondido)';
         }
         
-        answersSummary += `Q${index + 1}: ${userAnswerText}\\n`;
+        answersSummary += `Q${index + 1}: ${userAnswerText}\n`;
     });
     
     // Criar link mailto
     const subject = `Resultado do Quiz - ${score}`;
-    const body = `Olá Professor!\\n\\nSegue meu resultado no quiz de programação:\\n\\nPontuação: ${score}\\n${timeInfo}\\n\\n${answersSummary}\\n\\nAtt.`;
+    const body = `Olá Professor!\n\nSegue meu resultado no quiz de programação:\n\nPontuação: ${score}\n${timeInfo}\n\n${answersSummary}\n\nAtt.`;
     
     const mailtoLink = `mailto:${teacherEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     
@@ -316,13 +372,13 @@ function sendResultToTeacher() {
     window.location.href = mailtoLink;
 }
 
-// Reiniciar quiz - CORRIGIDO para 45 minutos
+// Reiniciar quiz
 function restartQuiz() {
     // Resetar variáveis
     selectedQuestions = [];
     currentQuestionIndex = 0;
     userAnswers = [];
-    timeLeft = 45 * 60; // 45 minutos
+    timeLeft = 30 * 60;
     cheatDetected = false;
     finalScore = 0;
     
@@ -448,29 +504,6 @@ style.textContent = `
         transform: translateY(-2px);
         box-shadow: 0 4px 15px rgba(39, 174, 96, 0.4);
     }
-    
-    .code-container {
-        background: #f8f9fa;
-        padding: 15px;
-        border-radius: 8px;
-        border: 1px solid #e9ecef;
-        font-family: 'Courier New', monospace;
-        margin: 15px 0;
-    }
-    
-    .code-input {
-        background: #fff;
-        border: 2px solid #3498db;
-        border-radius: 4px;
-        padding: 5px 10px;
-        font-family: 'Courier New', monospace;
-        min-width: 100px;
-    }
-    
-    .code-input.correct {
-        border-color: #27ae60;
-        background: #d4edda;
-    }
 `;
 document.head.appendChild(style);
 
@@ -479,3 +512,21 @@ document.addEventListener('DOMContentLoaded', function() {
     // Focar no campo de senha
     document.getElementById('password').focus();
 });
+
+// Função para alternar coluna de estudo
+function toggleStudyColumn() {
+    const studyColumn = document.getElementById('studyColumn');
+    const quizColumn = document.getElementById('quizColumn');
+    const toggleBtns = document.querySelectorAll('.toggle-btn');
+    
+    studyColumn.classList.toggle('collapsed');
+    quizColumn.classList.toggle('expanded');
+    
+    toggleBtns.forEach(btn => {
+        if (studyColumn.classList.contains('collapsed')) {
+            btn.textContent = '📚 Material';
+        } else {
+            btn.textContent = '◀️ Ocultar';
+        }
+    });
+}
