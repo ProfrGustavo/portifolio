@@ -99,12 +99,7 @@ const questionBank = [
         correct: "{}",
         options: ["{}", "[]", "new Object()", "object()"]
     },
-    {
-         type: "multiple",
-    question: "Qual tag HTML é usada para incluir JavaScript?",
-    options: ["<javascript>", "<js>", "<code>", "<script>"],
-    correct: 3
-    },
+    
     {
         type: "code",
         question: "Complete o código para verificar igualdade estrita:",
