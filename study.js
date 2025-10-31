@@ -112,6 +112,118 @@ Crie uma página com:
 5. Valide seu HTML com validators`
     },
 
+ "git-comandos": {
+        title: "🛠️ Git - Comandos Essenciais",
+        content: `📚 **COMANDOS GIT MAIS USADOS:**
+
+# BAIXAR alterações do repositório
+git pull origin main
+
+# ENVIAR alterações para o repositório  
+git push origin main
+
+# CLONAR repositório pela primeira vez
+git clone https://github.com/usuario/projeto.git
+
+# BAIXAR mas NÃO integrar alterações
+git fetch origin
+
+🎯 **DIFERENÇA IMPORTANTE:**
+git pull = git fetch + git merge  (faz ambos)
+git fetch = apenas baixa (mais seguro)`
+    },
+
+    "css-cores-fundos": {
+        title: "🎨 CSS - Cores e Fundos",
+        content: `🎨 **PROPRIEDADES DE COR EM CSS:**
+
+/* COR do TEXTO */
+color: white;           /* Nome da cor */
+color: #ffffff;         /* Hexadecimal */
+color: rgb(255,255,255); /* RGB */
+
+/* COR de FUNDO */
+background-color: blue;
+background-color: #0000ff;
+background-color: rgb(0, 0, 255);
+
+📏 **MARGIN vs PADDING:**
+
+/* MARGIN - Espaço EXTERNO */
+margin: 10px;           /* Todos os lados */
+margin: 10px 20px;      /* Vertical | Horizontal */
+
+/* PADDING - Espaço INTERNO */  
+padding: 15px;
+padding: 10px 5px 15px 20px; /* Top | Right | Bottom | Left */
+
+🎪 **FLEXBOX - Layout Moderno:**
+
+.container {
+    display: flex;          /* ✅ Ativa Flexbox */
+    justify-content: center; /* Alinha horizontalmente */
+    align-items: center;    /* Alinha verticalmente */
+}`
+    },
+
+    "html-tags": {
+        title: "🌐 HTML - Tags Essenciais",
+        content: `🏗️ **TAGS HTML MAIS IMPORTANTES:**
+
+<!-- DIV - Container genérico -->
+<div class="box">
+    Conteúdo aqui
+</div>                    <!-- ✅ Fechamento correto -->
+
+<!-- LINK entre páginas -->
+<a href="https://exemplo.com">Texto do Link</a>
+
+📝 **REGRA DE FECHAMENTO:**
+Sempre feche tags com </nomedatag>`
+    },
+
+    "javascript-avancado": {
+        title: "⚡ JavaScript - Conceitos Avançados",
+        content: `📄 **JSON - Troca de Dados:**
+
+// OBJETO → STRING JSON
+let pessoa = {nome: "Ana", idade: 28};
+let jsonString = JSON.stringify(pessoa);
+
+// STRING JSON → OBJETO
+let objeto = JSON.parse('{"nome":"João","idade":32}');
+
+🌐 **MANIPULAÇÃO DO DOM:**
+
+// REMOVER elemento da página
+elemento.remove();          // ✅ Método moderno
+
+// REQUISIÇÃO HTTP GET
+fetch('https://api.com/data')
+    .then(response => response.json())  // ✅ Converte para objeto
+    .then(data => console.log(data));
+
+⏳ **ASYNC/AWAIT - Código Assíncrono:**
+
+async function buscarDados() {    // ✅ Palavra-chave async
+    let response = await fetch(url);
+    return response.json();
+}`
+    },
+
+    "licencas-software": {
+        title: "📜 Licenças de Software",
+        content: `🎓 **LICENÇAS POPULARES:**
+
+MIT License - ✅ Gratuita, permite uso comercial e modificações
+GPL - Gratuita, exige que derivados sejam open source
+Apache - Similar à MIT, com proteção de patentes
+
+💡 **PARA ESTUDANTES:**
+MIT License é a mais popular para projetos acadêmicos
+e open source.`
+    }
+
     "css-sintaxe-seletores": {
         title: "🎨 CSS - Sintaxe, Seletores e Box Model",
         content: `🎨 **CSS (Cascading Style Sheets)**
@@ -1338,6 +1450,7 @@ let [usuario, posts] = await Promise.all([
 • Use Babel para compatibilidade com navegadores antigos
 • Teste sempre em diferentes ambientes`
     },
+
 
     "git-comandos": {
         title: "🛠️ Git - Controle de Versão e Comandos Essenciais",
