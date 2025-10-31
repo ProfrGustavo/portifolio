@@ -63,7 +63,7 @@ const questionBank = [
     {
         type: "multiple",
         question: "Qual comando é usado para declarar uma variável em JavaScript?",
-        options: ["variable", "var", "let", "const"],
+        options: ["variable", "var", "img", "const"],
         correct: 1
     },
     {
@@ -102,8 +102,8 @@ const questionBank = [
     {
         type: "multiple",
         question: "Qual tag HTML é usada para incluir JavaScript?",
-        options: ["<javascript>", "<script>", "<js>", "<code>"],
-        correct: 1
+        options: ["<javascript>", "<js>", "<code>","<script>"],
+        correct: 3
     },
     {
         type: "code",
@@ -133,16 +133,16 @@ const questionBank = [
     },
     {
         type: "code",
-        question: "Complete o código para criar uma promessa:",
+        question: "Complete o código para criar uma nova promessa:",
         code: `let promessa = ___________ Promise((resolve, reject) => {\n    // código aqui\n});`,
         correct: "new",
         options: ["new", "create", "make", "build"]
     },
     {
-        type: "multiple",
-        question: "Qual estrutura de dados segue o princípio LIFO?",
-        options: ["Fila", "Pilha", "Lista", "Árvore"],
-        correct: 1
+         type: "multiple",
+    question: "Qual plataforma é muito usada para colocar sites no ar?",
+    options: ["Photoshop", "Excel", "Word","vercel"],
+    correct: 3
     },
     {
         type: "code",
@@ -153,42 +153,47 @@ const questionBank = [
     },
     {
         type: "multiple",
-        question: "Qual hook do React é usado para estado?",
-        options: ["useEffect", "useState", "useContext", "useReducer"],
-        correct: 1
+    question: "Qual propriedade CSS muda a cor de fundo de um elemento?",
+    options: ["color", "background-color", "bg-color", "background"],
+    correct: 1
     },
     {
-        type: "code",
-        question: "Complete a destruturação de array:",
-        code: `let [primeiro, ___________] = [1, 2, 3];`,
-        correct: "segundo",
-        options: ["segundo", "2", "resto", "array"]
+         type: "code", 
+    question: "Complete o código para definir a cor do texto como branco:",
+    code: `.texto {\n    color: ___________;\n}`,
+    correct: "white",
+    options: ["white", "#000", "black", "#fff"]
+    },
+    {
+       type: "multiple",
+    question: "Qual licença de software é muito popular e permite uso gratuito para estudantes?",
+    options: ["MIT License", "Windows License", "Adobe License", "Microsoft Office License"],
+    correct: 0
+    },
+    {
+          type: "code",
+    question: "Complete o código HTML para fechar a div:",
+    code: `<div class="box">\n    Conteúdo aqui\n    ___________`,
+    correct: "</div>",
+    options: ["</div>", "</box>", "<div/>", "</class>"]
     },
     {
         type: "multiple",
-        question: "Qual comando Git é usado para baixar alterações?",
-        options: ["git pull", "git push", "git clone", "git fetch"],
-        correct: 0
+    question: "O que é JSON?",
+    options: [
+        "JavaScript Object Notation - formato para troca de dados",
+        "Java Standard Output Network", 
+        "JavaScript Online Notation",
+        "Java System Object Notation"
+    ],
+    correct: 0
     },
     {
-        type: "code",
-        question: "Complete o código para fazer uma requisição GET:",
-        code: `fetch('https://api.com/data')\n    .then(response => response.___________())\n    .then(data => console.log(data));`,
-        correct: "json",
-        options: ["json", "text", "data", "body"]
-    },
-    {
-        type: "multiple",
-        question: "Qual método converte JSON em objeto JavaScript?",
-        options: ["JSON.parse()", "JSON.stringify()", "JSON.convert()", "JSON.toObject()"],
-        correct: 0
-    },
-    {
-        type: "code",
-        question: "Complete a função assíncrona:",
-        code: `___________ function buscarDados() {\n    let response = await fetch(url);\n    return response.json();\n}`,
-        correct: "async",
-        options: ["async", "await", "function", "const"]
+         type: "code",
+    question: "Complete o código CSS para definir margin de 10px:",
+    code: `.elemento {\n    ___________\n}`,
+    correct: "margin: 10px;",
+    options: ["margin: 10px;", "padding: 10px;", "border: 10px;", "spacing: 10px;"]
     },
     {
         type: "multiple",
@@ -198,10 +203,10 @@ const questionBank = [
     },
     {
         type: "code",
-        question: "Complete o código para remover um elemento do DOM:",
-        code: `elemento.___________();`,
-        correct: "remove",
-        options: ["remove", "delete", "erase", "clear"]
+    question: "Complete o código CSS para usar Flexbox:",
+    code: `.container {\n    ___________\n}`,
+    correct: "display: flex;",
+    options: ["display: flex;", "flex: true;", "layout: flex;", "flexbox: on;"]
     },
     {
         type: "multiple",
@@ -263,7 +268,7 @@ const questionBank = [
     },
     {
         type: "code",
-        question: "Complete o código para criar um Map:",
+        question: "Complete o código para criar um novo Map:",
         code: `let mapa = ___________ Map();`,
         correct: "new",
         options: ["new", "create", "make", "build"]
