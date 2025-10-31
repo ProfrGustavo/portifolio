@@ -6,6 +6,7 @@ let userAnswers = [];
 let quizStarted = false;
 let timeLeft = 30 * 60; // 30 minutos em segundos
 let timerInterval;
+let finalScore = 0; // Nova variável para armazenar a pontuação final
 
 // Verificação de senha com regex
 function checkPassword() {
@@ -138,7 +139,7 @@ function buildCodeCompletionHTML(question, index) {
     let html = `<div class="question-text">${question.question}</div>`;
     
     // Processar o código para destacar a parte que deve ser completada
-    const codeWithInput = question.code.replace('_____', 
+    const codeWithInput = question.code.replace('___________', 
         `<input type="text" 
                 class="code-input" 
                 id="codeInput-${index}" 
@@ -260,7 +261,7 @@ function submitQuiz() {
     clearInterval(timerInterval);
     
     // Calcular pontuação
-    const score = calculateScore();
+    finalScore = calculateScore();
     const timeUsed = 30 * 60 - timeLeft;
     const minutesUsed = Math.floor(timeUsed / 60);
     const secondsUsed = timeUsed % 60;
@@ -269,7 +270,7 @@ function submitQuiz() {
     document.getElementById('quizContainer').style.display = 'none';
     document.getElementById('resultContainer').style.display = 'block';
     
-    document.getElementById('score').textContent = `${score}/${selectedQuestions.length}`;
+    document.getElementById('score').textContent = `${finalScore}/${selectedQuestions.length}`;
     document.getElementById('timeInfo').textContent = 
         `Tempo utilizado: ${minutesUsed}min ${secondsUsed}s`;
     
@@ -307,7 +308,7 @@ function showAnswersReview() {
         
         if (question.type === 'multiple') {
             isCorrect = userAnswer === question.correct;
-            userAnswerText = question.options[userAnswer];
+            userAnswerText = question.options[userAnswer] || '(não respondido)';
             correctAnswer = question.options[question.correct];
         } else if (question.type === 'code') {
             isCorrect = userAnswer && userAnswer.toLowerCase() === question.correct.toLowerCase();
@@ -327,6 +328,48 @@ function showAnswersReview() {
     });
     
     reviewElement.innerHTML = reviewHTML;
+    
+    // Adicionar botão de enviar resultado
+    reviewHTML += `
+        <div class="email-section">
+            <button onclick="sendResultToTeacher()" class="email-btn">
+                📧 Enviar Resultado para Professor
+            </button>
+        </div>
+    `;
+    
+    reviewElement.innerHTML = reviewHTML;
+}
+
+// Função para enviar resultado para o professor
+function sendResultToTeacher() {
+    const score = document.getElementById('score').textContent;
+    const timeInfo = document.getElementById('timeInfo').textContent;
+    const teacherEmail = "de.medeiros.gustavo@escola.pr.gov.br";
+    
+    // Criar resumo das respostas
+    let answersSummary = "Resumo das respostas:\n\n";
+    selectedQuestions.forEach((question, index) => {
+        const userAnswer = userAnswers[index];
+        let userAnswerText = '';
+        
+        if (question.type === 'multiple') {
+            userAnswerText = question.options[userAnswer] || '(não respondido)';
+        } else if (question.type === 'code') {
+            userAnswerText = userAnswer || '(não respondido)';
+        }
+        
+        answersSummary += `Q${index + 1}: ${userAnswerText}\n`;
+    });
+    
+    // Criar link mailto
+    const subject = `Resultado do Quiz - ${score}`;
+    const body = `Olá Professor!\n\nSegue meu resultado no quiz de programação:\n\nPontuação: ${score}\n${timeInfo}\n\n${answersSummary}\n\nAtt.`;
+    
+    const mailtoLink = `mailto:${teacherEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    
+    // Abrir cliente de email
+    window.location.href = mailtoLink;
 }
 
 // Reiniciar quiz
@@ -337,6 +380,7 @@ function restartQuiz() {
     userAnswers = [];
     timeLeft = 30 * 60;
     cheatDetected = false;
+    finalScore = 0;
     
     // Mostrar tela de login
     document.getElementById('resultContainer').style.display = 'none';
@@ -436,6 +480,30 @@ style.textContent = `
         50% { opacity: 0.5; }
         100% { opacity: 1; }
     }
+    
+    .email-section {
+        margin-top: 20px;
+        text-align: center;
+        padding: 20px;
+        border-top: 2px solid #3498db;
+    }
+    
+    .email-btn {
+        background: linear-gradient(135deg, #27ae60, #2ecc71);
+        color: white;
+        padding: 12px 25px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    
+    .email-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(39, 174, 96, 0.4);
+    }
 `;
 document.head.appendChild(style);
 
@@ -445,8 +513,7 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('password').focus();
 });
 
-
-// Adicionar esta função ao script.js se não existir
+// Função para alternar coluna de estudo
 function toggleStudyColumn() {
     const studyColumn = document.getElementById('studyColumn');
     const quizColumn = document.getElementById('quizColumn');
