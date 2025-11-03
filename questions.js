@@ -19,9 +19,9 @@ const questionBank = [
     {
         type: "multiple",
         question: "Qual tag HTML é usada para criar um link?",
-        correct: 1
-        options: ["<link>", "<a>", "<href>", "<url>"],
         
+        options: ["<link>", "<a>", "<href>", "<url>"],
+        correct: 1
     },
     {
         type: "code",
@@ -285,9 +285,8 @@ const questionBank = [
     {
         type: "multiple",
         question: "Qual tag HTML cria uma lista não ordenada?",
-        correct: 1
         options: ["<ol>", "<ul>", "<li>", "<list>"],
-        
+        correct: 1
     },
     {
         type: "code",
