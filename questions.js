@@ -285,8 +285,9 @@ const questionBank = [
     {
         type: "multiple",
         question: "Qual tag HTML cria uma lista não ordenada?",
-        options: ["<ol>", "<ul>", "<li>", "<list>"],
         correct: 1
+        options: ["<ol>", "<ul>", "<li>", "<list>"],
+        
     },
     {
         type: "code",
