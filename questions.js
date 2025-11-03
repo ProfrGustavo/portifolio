@@ -19,8 +19,9 @@ const questionBank = [
     {
         type: "multiple",
         question: "Qual tag HTML é usada para criar um link?",
-        options: ["<link>", "<a>", "<href>", "<url>"],
         correct: 1
+        options: ["<link>", "<a>", "<href>", "<url>"],
+        
     },
     {
         type: "code",
