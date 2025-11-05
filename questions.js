@@ -1049,7 +1049,7 @@ const questionBank = [
         ],
         correct: 1
     }
-    // ... (as demais questões continuariam seguindo esse padrão de complexidade)
+   
 ];
 
 // Nota: Em produção, as strings acima deveriam ser criptografadas
