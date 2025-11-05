@@ -1,4 +1,4 @@
-const questionBankDigitalCitizenship = [
+const questionBank = [
     {
         question: "Analise este cenário: 'João recebeu uma mensagem urgente pedindo seus dados bancários para resolver um suposto problema técnico. A mensagem vinha de um número desconhecido e pedia ação imediata.' Qual conceito de segurança digital melhor se aplica a essa situação?",
         options: [
@@ -1012,7 +1012,7 @@ const questionBankDigitalCitizenship = [
         ],
         correct: 0
     },
-    
+
     {
         question: "Deepfakes representam ameaça particular à:",
         options: [
